@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Archives (Ocarina Charts.zip duplicates the "Ocarina Charts/" folder)
+*.zip
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~

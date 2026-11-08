@@ -1,0 +1,308 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ocarina Major Key Fingerings</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Noto+Music&display=swap">
+<style>
+/* Layout: summary table up top, then one engraved staff per key with the chosen input stacked under each note; the performance octave is shaded. */
+:root {
+  --paper: #eef1f6;
+  --surface: #ffffff;
+  --ink: #18203a;
+  --muted: #5a6479;
+  --line: #d3d9e4;
+  --accent: #2443a3;
+  --accent-soft: #e2e8f8;
+  --dpad: #9a5a07;
+  --dpad-soft: #fbefdc;
+  --stick: #0c6e60;
+  --stick-soft: #dcf2ee;
+  --warn: #b3261e;
+  --warn-soft: #fbe3e1;
+  --ok: #1d6b35;
+  --ok-soft: #dff1e4;
+  --mid: #8a5a00;
+  --mid-soft: #f8ecd4;
+  --staff: #18203a;
+  --dim: #a6aec0;
+  --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --f-music: "Noto Music", "Bravura Text", "Segoe UI Symbol", "Apple Symbols", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e1320; --surface: #161d2d; --ink: #e5e9f2; --muted: #98a2b6; --line: #2a3347;
+    --accent: #93a9ff; --accent-soft: #1e2948; --dpad: #f2b45d; --dpad-soft: #3a2a12;
+    --stick: #56d4bb; --stick-soft: #12352f; --warn: #ff8a80; --warn-soft: #3d1a18;
+    --ok: #7bd99a; --ok-soft: #15301f; --mid: #f2c46b; --mid-soft: #382a10;
+    --staff: #e5e9f2; --dim: #4c5670; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e1320; --surface: #161d2d; --ink: #e5e9f2; --muted: #98a2b6; --line: #2a3347;
+  --accent: #93a9ff; --accent-soft: #1e2948; --dpad: #f2b45d; --dpad-soft: #3a2a12;
+  --stick: #56d4bb; --stick-soft: #12352f; --warn: #ff8a80; --warn-soft: #3d1a18;
+  --ok: #7bd99a; --ok-soft: #15301f; --mid: #f2c46b; --mid-soft: #382a10;
+  --staff: #e5e9f2; --dim: #4c5670; color-scheme: dark;
+}
+
+body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap {
+  max-width: 1080px; margin: 0 auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px;
+}
+header { display: grid; gap: 10px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 6vw, 46px); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { margin: 0; color: var(--muted); max-width: 64ch; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 12px; min-width: 0; }
+.panel h2, .sec { margin: 0; font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.rules { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px 22px; }
+.rules li { display: grid; gap: 4px; min-width: 0; }
+.rules b { font-weight: 600; }
+.rules span { color: var(--muted); font-size: 14px; }
+
+/* summary table */
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.small { font-size: 12px; }
+th { text-align: left; font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 0 10px 8px 0; border-bottom: 1px solid var(--line); }
+td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); vertical-align: middle; font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+td a { color: var(--ink); text-decoration: none; font-family: var(--f-display); font-weight: 700; font-size: 18px; }
+td a:hover { color: var(--accent); }
+td a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+.mono { font-family: var(--f-mono); font-size: 13px; }
+.muted { color: var(--muted); }
+
+.pill { display: inline-block; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.pill.Easy { background: var(--ok-soft); color: var(--ok); }
+.pill.Moderate { background: var(--mid-soft); color: var(--mid); }
+.pill.Hard, .pill.Not { background: var(--warn-soft); color: var(--warn); }
+.thumb { display: inline-flex; gap: 4px; align-items: center; }
+
+/* chips */
+.btn { display: inline-grid; place-items: center; font-family: var(--f-mono); font-weight: 600; font-size: 12px; color: var(--surface); background: var(--accent); width: 26px; height: 26px; border-radius: 50%; }
+.btn.sh { width: 34px; border-radius: 8px 8px 6px 6px; }
+.m { display: inline-flex; align-items: center; gap: 2px; height: 22px; padding: 0 5px 0 4px; border-radius: 5px; font-family: var(--f-mono); font-size: 12px; font-weight: 600; }
+.m svg { width: 14px; height: 14px; display: block; }
+.m.dpad { background: var(--dpad-soft); color: var(--dpad); }
+.m.stick { background: var(--stick-soft); color: var(--stick); }
+
+/* key cards */
+.keys { display: grid; gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; min-width: 0; scroll-margin-top: 16px; }
+.card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; padding: 16px 18px 6px; }
+.card-head h3 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 28px; line-height: 1; }
+.card-head h3 small { font-family: var(--f-body); font-weight: 400; font-size: 15px; color: var(--muted); margin-left: 6px; }
+.card-head .facts { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13px; color: var(--muted); }
+.card-head .facts b { color: var(--ink); font-weight: 600; font-family: var(--f-mono); font-size: 13px; }
+.scroll { overflow-x: auto; padding: 4px 18px 14px; }
+.score { width: max-content; }
+.score svg { display: block; }
+.cols { display: grid; }
+.col { display: grid; justify-items: center; align-content: start; gap: 4px; padding: 6px 0 8px; }
+.col.in { background: var(--accent-soft); }
+.col.in.first { border-radius: 0 0 0 8px; }
+.col.in.last { border-radius: 0 0 8px 0; }
+.col .lab { font-family: var(--f-display); font-weight: 700; font-size: 15px; line-height: 1.1; }
+.col .lab sub { font-family: var(--f-body); font-weight: 500; font-size: 10px; vertical-align: baseline; position: relative; top: .2em; }
+.col .deg { font-family: var(--f-mono); font-size: 10px; color: var(--muted); }
+.col.out { opacity: .42; }
+.flag { font-family: var(--f-mono); font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--warn); border: 1px solid var(--warn); border-radius: 3px; padding: 0 3px; }
+.note { margin: 0; padding: 0 18px 16px; font-size: 13px; color: var(--muted); max-width: 80ch; }
+.note b { color: var(--ink); font-weight: 600; }
+
+footer { font-size: 13px; color: var(--muted); max-width: 72ch; display: grid; gap: 6px; }
+footer p { margin: 0; }
+
+@media (max-width: 480px) {
+  .mv { display: none; }
+  .card-head { padding: 14px 14px 4px; }
+  .scroll { padding: 4px 14px 12px; }
+  .note { padding: 0 14px 14px; }
+}
+@media print {
+  @page { size: letter; margin: 0.45in; }
+  :root { --paper: #ffffff; --surface: #ffffff; --ink: #18203a; --muted: #5a6479; --line: #d3d9e4;
+    --accent: #2443a3; --accent-soft: #e8edf9; --dpad: #9a5a07; --dpad-soft: #fbefdc; --stick: #0c6e60; --stick-soft: #dcf2ee;
+    --warn: #b3261e; --warn-soft: #fbe3e1; --ok: #1d6b35; --ok-soft: #dff1e4; --mid: #8a5a00; --mid-soft: #f8ecd4; --staff: #18203a; --dim: #a6aec0; color-scheme: light; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .wrap { padding: 0; gap: 18px; max-width: none; }
+  h1 { font-size: 32px; }
+  .card, .panel { break-inside: avoid; }
+  .scroll { overflow: visible; }
+  .summary { break-after: page; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Ocarina of Time · Switch 2 · Major keys</div>
+    <h1>Performance fingerings for all 12 major keys</h1>
+    <p class="lede">One input per scale note, picked for playing in tempo rather than for having the fewest buttons. The shaded span on each staff is the octave to perform in; dimmed notes are in range but outside it.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="rules-h">
+    <h2 id="rules-h">How the fingerings were chosen</h2>
+    <ul class="rules">
+      <li><b>One thumb, two modifiers.</b><span>Your left thumb works the D-pad and the stick, so stacking them needs a claw grip. F5 needs that grip. Low B3 also needs L at the same time, so it is out of reach in tempo.</span></li>
+      <li><b>D-pad first.</b><span>The D-pad lands a half step exactly. The stick gives a whole step only at full tilt, so it is used where it saves a thumb move.</span></li>
+      <li><b>Keep the thumb parked.</b><span>The thumb stays where it was during natural notes, so each key sticks to one modifier as long as it can. C major uses only the stick; G♭ and D♭ use only the D-pad.</span></li>
+      <li><b>Set the modifier, then the note.</b><span>Hold the D-pad or stick before pressing the note button so the note starts on pitch. Your right thumb covers A, X and Y; L and R are your index fingers.</span></li>
+    </ul>
+  </section>
+
+  <section class="panel summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance, around the circle of fifths</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Key</th><th>Perform</th><th>Difficulty</th><th>Left thumb</th><th class="mv">Thumb moves</th></tr></thead>
+        <tbody id="sumBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="keys" id="keys" aria-label="Keys"></section>
+
+  <footer>
+    <p>Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo hasn't published the remake's sounding octave, so treat octave numbers as written pitch.</p>
+    <p>Difficulty scores the performance octave played up and down: each D-pad press, each stick tilt, each switch of the thumb between D-pad and stick, and claw-grip notes. Alternative inputs for every note are on the full note chart.</p>
+  </footer>
+</div>
+
+<script>
+const KEYS = [{"name":"C","sign":0,"count":0,"notes":[{"midi":59,"deg":7,"letter":"B","acc":0,"oct":3,"label":"B3","input":["L","D-pad↓","stick↓"],"claw":true,"status":"reach"},{"midi":60,"deg":1,"letter":"C","acc":0,"oct":4,"label":"C4","input":["L","stick↓"],"claw":false,"status":"ok"},{"midi":62,"deg":2,"letter":"D","acc":0,"oct":4,"label":"D4","input":["L"],"claw":false,"status":"ok"},{"midi":64,"deg":3,"letter":"E","acc":0,"oct":4,"label":"E4","input":["L","stick↑"],"claw":false,"status":"ok"},{"midi":65,"deg":4,"letter":"F","acc":0,"oct":4,"label":"F4","input":["R"],"claw":false,"status":"ok"},{"midi":67,"deg":5,"letter":"G","acc":0,"oct":4,"label":"G4","input":["R","stick↑"],"claw":false,"status":"ok"},{"midi":69,"deg":6,"letter":"A","acc":0,"oct":4,"label":"A4","input":["A"],"claw":false,"status":"ok"},{"midi":71,"deg":7,"letter":"B","acc":0,"oct":4,"label":"B4","input":["Y"],"claw":false,"status":"ok"},{"midi":72,"deg":1,"letter":"C","acc":0,"oct":5,"label":"C5","input":["X","stick↓"],"claw":false,"status":"ok"},{"midi":74,"deg":2,"letter":"D","acc":0,"oct":5,"label":"D5","input":["X"],"claw":false,"status":"ok"},{"midi":76,"deg":3,"letter":"E","acc":0,"oct":5,"label":"E5","input":["X","stick↑"],"claw":false,"status":"ok"},{"midi":77,"deg":4,"letter":"F","acc":0,"oct":5,"label":"F5","input":["X","D-pad↑","stick↑"],"claw":true,"status":"claw"}],"window":{"kind":"tonic","start":1,"end":8,"lo":"C4","hi":"C5","cost":7.0,"mods":["stick↑","stick↓"],"thumb":"stick","travel":0,"stick":4,"dpad":0,"status":"clean","level":"Easy"},"tonic_fit":true,"clean_run":{"lo":"C4","hi":"E5","n":10}},{"name":"G","sign":0,"count":1,"notes":[{"midi":59,"deg":3,"letter":"B","acc":0,"oct":3,"label":"B3","input":["L","D-pad↓","stick↓"],"claw":true,"status":"reach"},{"midi":60,"deg":4,"letter":"C","acc":0,"oct":4,"label":"C4","input":["L","stick↓"],"claw":false,"status":"ok"},{"midi":62,"deg":5,"letter":"D","acc":0,"oct":4,"label":"D4","input":["L"],"claw":false,"status":"ok"},{"midi":64,"deg":6,"letter":"E","acc":0,"oct":4,"label":"E4","input":["R","D-pad↓"],"claw":false,"status":"ok"},{"midi":66,"deg":7,"letter":"F","acc":1,"oct":4,"label":"F♯4","input":["R","D-pad↑"],"claw":false,"status":"ok"},{"midi":67,"deg":1,"letter":"G","acc":0,"oct":4,"label":"G4","input":["R","stick↑"],"claw":false,"status":"ok"},{"midi":69,"deg":2,"letter":"A","acc":0,"oct":4,"label":"A4","input":["A"],"claw":false,"status":"ok"},{"midi":71,"deg":3,"letter":"B","acc":0,"oct":4,"label":"B4","input":["Y"],"claw":false,"status":"ok"},{"midi":72,"deg":4,"letter":"C","acc":0,"oct":5,"label":"C5","input":["X","stick↓"],"claw":false,"status":"ok"},{"midi":74,"deg":5,"letter":"D","acc":0,"oct":5,"label":"D5","input":["X"],"claw":false,"status":"ok"},{"midi":76,"deg":6,"letter":"E","acc":0,"oct":5,"label":"E5","input":["X","stick↑"],"claw":false,"status":"ok"}],"window":{"kind":"dominant","start":2,"end":9,"lo":"D4","hi":"D5","cost":8.4,"mods":["D-pad↑","D-pad↓","stick↑","stick↓"],"thumb":"dpad+stick","travel":1,"stick":2,"dpad":2,"status":"clean","level":"Easy"},"tonic_fit":false,"clean_run":{"lo":"C4","hi":"E5","n":10}},{"name":"D","sign":0,"count":2,"notes":[{"midi":59,"deg":6,"letter":"B","acc":0,"oct":3,"label":"B3","input":["L","D-pad↓","stick↓"],"claw":true,"status":"reach"},{"midi":61,"deg":7,"letter":"C","acc":1,"oct":4,"label":"C♯4","input":["L","D-pad↓"],"claw":false,"status":"ok"},{"midi":62,"deg":1,"letter":"D","acc":0,"oct":4,"label":"D4","input":["L"],"claw":false,"status":"ok"},{"midi":64,"deg":2,"letter":"E","acc":0,"oct":4,"label":"E4","input":["R","D-pad↓"],"claw":false,"status":"ok"},{"midi":66,"deg":3,"letter":"F","acc":1,"oct":4,"label":"F♯4","input":["R","D-pad↑"],"claw":false,"status":"ok"},{"midi":67,"deg":4,"letter":"G","acc":0,"oct":4,"label":"G4","input":["R","stick↑"],"claw":false,"status":"ok"},{"midi":69,"deg":5,"letter":"A","acc":0,"oct":4,"label":"A4","input":["A"],"claw":false,"status":"ok"},{"midi":71,"deg":6,"letter":"B","acc":0,"oct":4,"label":"B4","input":["Y"],"claw":false,"status":"ok"},{"midi":73,"deg":7,"letter":"C","acc":1,"oct":5,"label":"C♯5","input":["Y","stick↑"],"claw":false,"status":"ok"},{"midi":74,"deg":1,"letter":"D","acc":0,"oct":5,"label":"D5","input":["X"],"claw":false,"status":"ok"},{"midi":76,"deg":2,"letter":"E","acc":0,"oct":5,"label":"E5","input":["X","stick↑"],"claw":false,"status":"ok"}],"window":{"kind":"tonic","start":2,"end":9,"lo":"D4","hi":"D5","cost":8.4,"mods":["D-pad↑","D-pad↓","stick↑"],"thumb":"dpad+stick","travel":1,"stick":2,"dpad":2,"status":"clean","level":"Easy"},"tonic_fit":true,"clean_run":{"lo":"C♯4","hi":"E5","n":10}},{"name":"A","sign":0,"count":3,"notes":[{"midi":59,"deg":2,"letter":"B","acc":0,"oct":3,"label":"B3","input":["L","D-pad↓","stick↓"],"claw":true,"status":"reach"},{"midi":61,"deg":3,"letter":"C","acc":1,"oct":4,"label":"C♯4","input":["L","D-pad↓"],"claw":false,"status":"ok"},{"midi":62,"deg":4,"letter":"D","acc":0,"oct":4,"label":"D4","input":["L"],"claw":false,"status":"ok"},{"midi":64,"deg":5,"letter":"E","acc":0,"oct":4,"label":"E4","input":["R","D-pad↓"],"claw":false,"status":"ok"},{"midi":66,"deg":6,"letter":"F","acc":1,"oct":4,"label":"F♯4","input":["R","D-pad↑"],"claw":false,"status":"ok"},{"midi":68,"deg":7,"letter":"G","acc":1,"oct":4,"label":"G♯4","input":["A","D-pad↓"],"claw":false,"status":"ok"},{"midi":69,"deg":1,"letter":"A","acc":0,"oct":4,"label":"A4","input":["A"],"claw":false,"status":"ok"},{"midi":71,"deg":2,"letter":"B","acc":0,"oct":4,"label":"B4","input":["Y"],"claw":false,"status":"ok"},{"midi":73,"deg":3,"letter":"C","acc":1,"oct":5,"label":"C♯5","input":["X","D-pad↓"],"claw":false,"status":"ok"},{"midi":74,"deg":4,"letter":"D","acc":0,"oct":5,"label":"D5","input":["X"],"claw":false,"status":"ok"},{"midi":76,"deg":5,"letter":"E","acc":0,"oct":5,"label":"E5","input":["X","stick↑"],"claw":false,"status":"ok"}],"window":{"kind":"dominant","start":3,"end":10,"lo":"E4","hi":"E5","cost":8.6,"mods":["D-pad↑","D-pad↓","stick↑"],"thumb":"dpad+stick","travel":1,"stick":1,"dpad":4,"status":"clean","level":"Easy"},"tonic_fit":false,"clean_run":{"lo":"C♯4","hi":"E5","n":10}},{"name":"E","sign":0,"count":4,"notes":[{"midi":59,"deg":5,"letter":"B","acc":0,"oct":3,"label":"B3","input":["L","D-pad↓","stick↓"],"claw":true,"status":"reach"},{"midi":61,"deg":6,"letter":"C","acc":1,"oct":4,"label":"C♯4","input":["L","D-pad↓"],"claw":false,"status":"ok"},{"midi":63,"deg":7,"letter":"D","acc":1,"oct":4,"label":"D♯4","input":["L","D-pad↑"],"claw":false,"status":"ok"},{"midi":64,"deg":1,"letter":"E","acc":0,"oct":4,"label":"E4","input":["R","D-pad↓"],"claw":false,"status":"ok"},{"midi":66,"deg":2,"letter":"F","acc":1,"oct":4,"label":"F♯4","input":["R","D-pad↑"],"claw":false,"status":"ok"},{"midi":68,"deg":3,"letter":"G","acc":1,"oct":4,"label":"G♯4","input":["A","D-pad↓"],"claw":false,"status":"ok"},{"midi":69,"deg":4,"letter":"A","acc":0,"oct":4,"label":"A4","input":["A"],"claw":false,"status":"ok"},{"midi":71,"deg":5,"letter":"B","acc":0,"oct":4,"label":"B4","input":["Y"],"claw":false,"status":"ok"},{"midi":73,"deg":6,"letter":"C","acc":1,"oct":5,"label":"C♯5","input":["X","D-pad↓"],"claw":false,"status":"ok"},{"midi":75,"deg":7,"letter":"D","acc":1,"oct":5,"label":"D♯5","input":["X","D-pad↑"],"claw":false,"status":"ok"},{"midi":76,"deg":1,"letter":"E","acc":0,"oct":5,"label":"E5","input":["X","stick↑"],"claw":false,"status":"ok"}],"window":{"kind":"tonic","start":3,"end":10,"lo":"E4","hi":"E5","cost":10.7,"mods":["D-pad↑","D-pad↓","stick↑"],"thumb":"dpad+stick","travel":1,"stick":1,"dpad":5,"status":"clean","level":"Moderate"},"tonic_fit":true,"clean_run":{"lo":"C♯4","hi":"E5","n":10}},{"name":"B","sign":0,"count":5,"notes":[{"midi":59,"deg":1,"letter":"B","acc":0,"oct":3,"label":"B3","input":["L","D-pad↓","stick↓"],"claw":true,"status":"reach"},{"midi":61,"deg":2,"letter":"C","acc":1,"oct":4,"label":"C♯4","input":["L","D-pad↓"],"claw":false,"status":"ok"},{"midi":63,"deg":3,"letter":"D","acc":1,"oct":4,"label":"D♯4","input":["L","D-pad↑"],"claw":false,"status":"ok"},{"midi":64,"deg":4,"letter":"E","acc":0,"oct":4,"label":"E4","input":["R","D-pad↓"],"claw":false,"status":"ok"},{"midi":66,"deg":5,"letter":"F","acc":1,"oct":4,"label":"F♯4","input":["R","D-pad↑"],"claw":false,"status":"ok"},{"midi":68,"deg":6,"letter":"G","acc":1,"oct":4,"label":"G♯4","input":["A","D-pad↓"],"claw":false,"status":"ok"},{"midi":70,"deg":7,"letter":"A","acc":1,"oct":4,"label":"A♯4","input":["Y","D-pad↓"],"claw":false,"status":"ok"},{"midi":71,"deg":1,"letter":"B","acc":0,"oct":4,"label":"B4","input":["Y"],"claw":false,"status":"ok"},{"midi":73,"deg":2,"letter":"C","acc":1,"oct":5,"label":"C♯5","input":["X","D-pad↓"],"claw":false,"status":"ok"},{"midi":75,"deg":3,"letter":"D","acc":1,"oct":5,"label":"D♯5","input":["X","D-pad↑"],"claw":false,"status":"ok"},{"midi":76,"deg":4,"letter":"E","acc":0,"oct":5,"label":"E5","input":["X","stick↑"],"claw":false,"status":"ok"}],"window":{"kind":"tonic","start":0,"end":7,"lo":"B3","hi":"B4","cost":16.7,"mods":["D-pad↑","D-pad↓","stick↓"],"thumb":"both+dpad","travel":1,"stick":1,"dpad":7,"status":"reach","level":"Not practical"},"tonic_fit":false,"clean_run":{"lo":"C♯4","hi":"E5","n":10}},{"name":"G♭","sign":-1,"count":6,"notes":[{"midi":59,"deg":4,"letter":"C","acc":-1,"oct":4,"label":"C♭4","input":["L","D-pad↓","stick↓"],"claw":true,"status":"reach"},{"midi":61,"deg":5,"letter":"D","acc":-1,"oct":4,"label":"D♭4","input":["L","D-pad↓"],"claw":false,"status":"ok"},{"midi":63,"deg":6,"letter":"E","acc":-1,"oct":4,"label":"E♭4","input":["L","D-pad↑"],"claw":false,"status":"ok"},{"midi":65,"deg":7,"letter":"F","acc":0,"oct":4,"label":"F4","input":["R"],"claw":false,"status":"ok"},{"midi":66,"deg":1,"letter":"G","acc":-1,"oct":4,"label":"G♭4","input":["R","D-pad↑"],"claw":false,"status":"ok"},{"midi":68,"deg":2,"letter":"A","acc":-1,"oct":4,"label":"A♭4","input":["A","D-pad↓"],"claw":false,"status":"ok"},{"midi":70,"deg":3,"letter":"B","acc":-1,"oct":4,"label":"B♭4","input":["Y","D-pad↓"],"claw":false,"status":"ok"},{"midi":71,"deg":4,"letter":"C","acc":-1,"oct":5,"label":"C♭5","input":["Y"],"claw":false,"status":"ok"},{"midi":73,"deg":5,"letter":"D","acc":-1,"oct":5,"label":"D♭5","input":["X","D-pad↓"],"claw":false,"status":"ok"},{"midi":75,"deg":6,"letter":"E","acc":-1,"oct":5,"label":"E♭5","input":["X","D-pad↑"],"claw":false,"status":"ok"},{"midi":77,"deg":7,"letter":"F","acc":0,"oct":5,"label":"F5","input":["X","D-pad↑","stick↑"],"claw":true,"status":"claw"}],"window":{"kind":"dominant","start":1,"end":8,"lo":"D♭4","hi":"D♭5","cost":8.4,"mods":["D-pad↑","D-pad↓"],"thumb":"dpad","travel":0,"stick":0,"dpad":6,"status":"clean","level":"Easy"},"tonic_fit":false,"clean_run":{"lo":"D♭4","hi":"E♭5","n":9}},{"name":"D♭","sign":-1,"count":5,"notes":[{"midi":60,"deg":7,"letter":"C","acc":0,"oct":4,"label":"C4","input":["L","stick↓"],"claw":false,"status":"ok"},{"midi":61,"deg":1,"letter":"D","acc":-1,"oct":4,"label":"D♭4","input":["L","D-pad↓"],"claw":false,"status":"ok"},{"midi":63,"deg":2,"letter":"E","acc":-1,"oct":4,"label":"E♭4","input":["L","D-pad↑"],"claw":false,"status":"ok"},{"midi":65,"deg":3,"letter":"F","acc":0,"oct":4,"label":"F4","input":["R"],"claw":false,"status":"ok"},{"midi":66,"deg":4,"letter":"G","acc":-1,"oct":4,"label":"G♭4","input":["R","D-pad↑"],"claw":false,"status":"ok"},{"midi":68,"deg":5,"letter":"A","acc":-1,"oct":4,"label":"A♭4","input":["A","D-pad↓"],"claw":false,"status":"ok"},{"midi":70,"deg":6,"letter":"B","acc":-1,"oct":4,"label":"B♭4","input":["A","D-pad↑"],"claw":false,"status":"ok"},{"midi":72,"deg":7,"letter":"C","acc":0,"oct":5,"label":"C5","input":["Y","D-pad↑"],"claw":false,"status":"ok"},{"midi":73,"deg":1,"letter":"D","acc":-1,"oct":5,"label":"D♭5","input":["X","D-pad↓"],"claw":false,"status":"ok"},{"midi":75,"deg":2,"letter":"E","acc":-1,"oct":5,"label":"E♭5","input":["X","D-pad↑"],"claw":false,"status":"ok"},{"midi":77,"deg":3,"letter":"F","acc":0,"oct":5,"label":"F5","input":["X","D-pad↑","stick↑"],"claw":true,"status":"claw"}],"window":{"kind":"tonic","start":1,"end":8,"lo":"D♭4","hi":"D♭5","cost":10.0,"mods":["D-pad↑","D-pad↓"],"thumb":"dpad","travel":0,"stick":0,"dpad":7,"status":"clean","level":"Moderate"},"tonic_fit":true,"clean_run":{"lo":"C4","hi":"E♭5","n":10}},{"name":"A♭","sign":-1,"count":4,"notes":[{"midi":60,"deg":3,"letter":"C","acc":0,"oct":4,"label":"C4","input":["L","stick↓"],"claw":false,"status":"ok"},{"midi":61,"deg":4,"letter":"D","acc":-1,"oct":4,"label":"D♭4","input":["L","D-pad↓"],"claw":false,"status":"ok"},{"midi":63,"deg":5,"letter":"E","acc":-1,"oct":4,"label":"E♭4","input":["L","D-pad↑"],"claw":false,"status":"ok"},{"midi":65,"deg":6,"letter":"F","acc":0,"oct":4,"label":"F4","input":["R"],"claw":false,"status":"ok"},{"midi":67,"deg":7,"letter":"G","acc":0,"oct":4,"label":"G4","input":["R","stick↑"],"claw":false,"status":"ok"},{"midi":68,"deg":1,"letter":"A","acc":-1,"oct":4,"label":"A♭4","input":["A","D-pad↓"],"claw":false,"status":"ok"},{"midi":70,"deg":2,"letter":"B","acc":-1,"oct":4,"label":"B♭4","input":["A","D-pad↑"],"claw":false,"status":"ok"},{"midi":72,"deg":3,"letter":"C","acc":0,"oct":5,"label":"C5","input":["Y","D-pad↑"],"claw":false,"status":"ok"},{"midi":73,"deg":4,"letter":"D","acc":-1,"oct":5,"label":"D♭5","input":["X","D-pad↓"],"claw":false,"status":"ok"},{"midi":75,"deg":5,"letter":"E","acc":-1,"oct":5,"label":"E♭5","input":["X","D-pad↑"],"claw":false,"status":"ok"},{"midi":77,"deg":6,"letter":"F","acc":0,"oct":5,"label":"F5","input":["X","D-pad↑","stick↑"],"claw":true,"status":"claw"}],"window":{"kind":"dominant","start":2,"end":9,"lo":"E♭4","hi":"E♭5","cost":12.6,"mods":["D-pad↑","D-pad↓","stick↑"],"thumb":"dpad+stick","travel":2,"stick":1,"dpad":6,"status":"clean","level":"Hard"},"tonic_fit":false,"clean_run":{"lo":"C4","hi":"E♭5","n":10}},{"name":"E♭","sign":-1,"count":3,"notes":[{"midi":60,"deg":6,"letter":"C","acc":0,"oct":4,"label":"C4","input":["L","stick↓"],"claw":false,"status":"ok"},{"midi":62,"deg":7,"letter":"D","acc":0,"oct":4,"label":"D4","input":["L"],"claw":false,"status":"ok"},{"midi":63,"deg":1,"letter":"E","acc":-1,"oct":4,"label":"E♭4","input":["R","stick↓"],"claw":false,"status":"ok"},{"midi":65,"deg":2,"letter":"F","acc":0,"oct":4,"label":"F4","input":["R"],"claw":false,"status":"ok"},{"midi":67,"deg":3,"letter":"G","acc":0,"oct":4,"label":"G4","input":["R","stick↑"],"claw":false,"status":"ok"},{"midi":68,"deg":4,"letter":"A","acc":-1,"oct":4,"label":"A♭4","input":["A","D-pad↓"],"claw":false,"status":"ok"},{"midi":70,"deg":5,"letter":"B","acc":-1,"oct":4,"label":"B♭4","input":["A","D-pad↑"],"claw":false,"status":"ok"},{"midi":72,"deg":6,"letter":"C","acc":0,"oct":5,"label":"C5","input":["Y","D-pad↑"],"claw":false,"status":"ok"},{"midi":74,"deg":7,"letter":"D","acc":0,"oct":5,"label":"D5","input":["X"],"claw":false,"status":"ok"},{"midi":75,"deg":1,"letter":"E","acc":-1,"oct":5,"label":"E♭5","input":["X","D-pad↑"],"claw":false,"status":"ok"},{"midi":77,"deg":2,"letter":"F","acc":0,"oct":5,"label":"F5","input":["X","D-pad↑","stick↑"],"claw":true,"status":"claw"}],"window":{"kind":"tonic","start":2,"end":9,"lo":"E♭4","hi":"E♭5","cost":10.4,"mods":["D-pad↑","D-pad↓","stick↑","stick↓"],"thumb":"dpad+stick","travel":1,"stick":2,"dpad":4,"status":"clean","level":"Moderate"},"tonic_fit":true,"clean_run":{"lo":"C4","hi":"E♭5","n":10}},{"name":"B♭","sign":-1,"count":2,"notes":[{"midi":60,"deg":2,"letter":"C","acc":0,"oct":4,"label":"C4","input":["L","stick↓"],"claw":false,"status":"ok"},{"midi":62,"deg":3,"letter":"D","acc":0,"oct":4,"label":"D4","input":["L"],"claw":false,"status":"ok"},{"midi":63,"deg":4,"letter":"E","acc":-1,"oct":4,"label":"E♭4","input":["R","stick↓"],"claw":false,"status":"ok"},{"midi":65,"deg":5,"letter":"F","acc":0,"oct":4,"label":"F4","input":["R"],"claw":false,"status":"ok"},{"midi":67,"deg":6,"letter":"G","acc":0,"oct":4,"label":"G4","input":["R","stick↑"],"claw":false,"status":"ok"},{"midi":69,"deg":7,"letter":"A","acc":0,"oct":4,"label":"A4","input":["A"],"claw":false,"status":"ok"},{"midi":70,"deg":1,"letter":"B","acc":-1,"oct":4,"label":"B♭4","input":["A","D-pad↑"],"claw":false,"status":"ok"},{"midi":72,"deg":2,"letter":"C","acc":0,"oct":5,"label":"C5","input":["Y","D-pad↑"],"claw":false,"status":"ok"},{"midi":74,"deg":3,"letter":"D","acc":0,"oct":5,"label":"D5","input":["X"],"claw":false,"status":"ok"},{"midi":75,"deg":4,"letter":"E","acc":-1,"oct":5,"label":"E♭5","input":["X","D-pad↑"],"claw":false,"status":"ok"},{"midi":77,"deg":5,"letter":"F","acc":0,"oct":5,"label":"F5","input":["X","D-pad↑","stick↑"],"claw":true,"status":"claw"}],"window":{"kind":"dominant","start":3,"end":10,"lo":"F4","hi":"F5","cost":14.7,"mods":["D-pad↑","stick↑"],"thumb":"both+dpad+stick","travel":2,"stick":2,"dpad":4,"status":"claw","level":"Hard"},"tonic_fit":false,"clean_run":{"lo":"C4","hi":"E♭5","n":10}},{"name":"F","sign":-1,"count":1,"notes":[{"midi":60,"deg":5,"letter":"C","acc":0,"oct":4,"label":"C4","input":["L","stick↓"],"claw":false,"status":"ok"},{"midi":62,"deg":6,"letter":"D","acc":0,"oct":4,"label":"D4","input":["L"],"claw":false,"status":"ok"},{"midi":64,"deg":7,"letter":"E","acc":0,"oct":4,"label":"E4","input":["L","stick↑"],"claw":false,"status":"ok"},{"midi":65,"deg":1,"letter":"F","acc":0,"oct":4,"label":"F4","input":["R"],"claw":false,"status":"ok"},{"midi":67,"deg":2,"letter":"G","acc":0,"oct":4,"label":"G4","input":["R","stick↑"],"claw":false,"status":"ok"},{"midi":69,"deg":3,"letter":"A","acc":0,"oct":4,"label":"A4","input":["A"],"claw":false,"status":"ok"},{"midi":70,"deg":4,"letter":"B","acc":-1,"oct":4,"label":"B♭4","input":["A","D-pad↑"],"claw":false,"status":"ok"},{"midi":72,"deg":5,"letter":"C","acc":0,"oct":5,"label":"C5","input":["Y","D-pad↑"],"claw":false,"status":"ok"},{"midi":74,"deg":6,"letter":"D","acc":0,"oct":5,"label":"D5","input":["X"],"claw":false,"status":"ok"},{"midi":76,"deg":7,"letter":"E","acc":0,"oct":5,"label":"E5","input":["X","stick↑"],"claw":false,"status":"ok"},{"midi":77,"deg":1,"letter":"F","acc":0,"oct":5,"label":"F5","input":["X","D-pad↑","stick↑"],"claw":true,"status":"claw"}],"window":{"kind":"dominant","start":0,"end":7,"lo":"C4","hi":"C5","cost":8.6,"mods":["D-pad↑","stick↑","stick↓"],"thumb":"dpad+stick","travel":1,"stick":3,"dpad":2,"status":"clean","level":"Easy"},"tonic_fit":false,"clean_run":{"lo":"C4","hi":"E5","n":10}}];
+const NS = "http://www.w3.org/2000/svg";
+const LET = { C:0, D:1, E:2, F:3, G:4, A:5, B:6 };
+const SHARP_STEPS = [10, 7, 11, 8, 5, 9, 6];
+const FLAT_STEPS = [6, 9, 5, 8, 4, 7, 3];
+const ENH = { "G♭": "F♯", "D♭": "C♯", "B": "C♭" };
+const SLUG = n => "key-" + n.replace("♭", "b").replace("♯", "s").toLowerCase();
+
+const dpadIcon = up => `<svg viewBox="0 0 18 18" aria-hidden="true"><path d="M6.5 1.5h5v5h5v5h-5v5h-5v-5h-5v-5h5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="${up ? "M6.5 1.5h5v5h-5z" : "M6.5 11.5h5v5h-5z"}" fill="currentColor"/></svg>`;
+const stickIcon = up => `<svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="${up ? 6 : 12}" r="3.4" fill="currentColor"/></svg>`;
+function modChip(p) {
+  const up = p.endsWith("↑"), dp = p.startsWith("D-pad");
+  const s = document.createElement("span");
+  s.className = "m " + (dp ? "dpad" : "stick");
+  s.innerHTML = (dp ? dpadIcon(up) : stickIcon(up)) + (up ? "↑" : "↓");
+  s.setAttribute("aria-label", (dp ? "D-pad " : "stick ") + (up ? "up" : "down"));
+  return s;
+}
+function btnChip(b) {
+  const s = document.createElement("span");
+  s.className = "btn" + (b === "L" || b === "R" ? " sh" : "");
+  s.textContent = b;
+  return s;
+}
+const label = n => `${n.letter}${n.acc === 1 ? "♯" : n.acc === -1 ? "♭" : ""}<sub>${n.oct}</sub>`;
+const plain = s => s.replace(/(\d)$/, "$1");
+
+/* ---------- summary ---------- */
+const sb = document.getElementById("sumBody");
+KEYS.forEach(k => {
+  const w = k.window;
+  const tr = document.createElement("tr");
+  const thumb = w.stick && w.dpad ? "D-pad + stick" : w.stick ? "Stick only" : w.dpad ? "D-pad only" : "None";
+  tr.innerHTML = `
+    <td><a href="#${SLUG(k.name)}">${k.name}</a></td>
+    <td><span class="mono">${w.lo}–${w.hi}</span><br><span class="muted small">${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"}</span></td>
+    <td><span class="pill ${w.level.split(" ")[0]}">${w.level}</span></td>
+    <td>${thumb}</td>
+    <td class="mono mv">${w.travel}</td>`;
+  sb.append(tr);
+});
+
+/* ---------- key cards ---------- */
+const CW = 52, SP = 8;
+const y = st => 78 - (st - 2) * (SP / 2);
+const host = document.getElementById("keys");
+
+KEYS.forEach(k => {
+  const w = k.window, notes = k.notes, N = notes.length;
+  const sigN = k.count;
+  const sharpKey = k.sign === 0;
+  const G = 34 + sigN * 9 + 10;
+  const W = G + N * CW + 4;
+
+  const card = document.createElement("article");
+  card.className = "card";
+  card.id = SLUG(k.name);
+  const thumb = w.stick && w.dpad ? "D-pad + stick" : w.stick ? "stick only" : w.dpad ? "D-pad only" : "no modifiers";
+  card.innerHTML = `
+    <div class="card-head">
+      <h3>${k.name}<small>major${ENH[k.name] ? " · " + ENH[k.name] : ""}</small></h3>
+      <div class="facts">
+        <span class="pill ${w.level.split(" ")[0]}">${w.level}</span>
+        <span>Perform <b>${w.lo}–${w.hi}</b> (${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"})</span>
+        <span>Thumb: ${thumb}</span>
+      </div>
+    </div>`;
+
+  // staff
+  let h = `<rect x="${G + w.start * CW}" y="0" width="${(w.end - w.start + 1) * CW}" height="116" rx="8" fill="var(--accent-soft)"/>`;
+  for (let st = 2; st <= 10; st += 2) h += `<line x1="2" x2="${W - 2}" y1="${y(st)}" y2="${y(st)}" stroke="var(--staff)" stroke-width="1"/>`;
+  h += `<text x="4" y="${y(2) + 8}" font-family="var(--f-music)" font-size="${SP * 5.2}" fill="var(--staff)">𝄞</text>`;
+  for (let i = 0; i < sigN; i++) {
+    const st = (sharpKey ? SHARP_STEPS : FLAT_STEPS)[i];
+    const glyph = sharpKey ? "♯" : "♭";
+    h += `<text x="${34 + i * 9}" y="${y(st) + (sharpKey ? 5.5 : 3.5)}" font-family="var(--f-music)" font-size="17" fill="var(--staff)">${glyph}</text>`;
+  }
+  notes.forEach((n, i) => {
+    const step = LET[n.letter] + (n.oct - 4) * 7;
+    const cx = G + i * CW + CW / 2;
+    const inWin = i >= w.start && i <= w.end;
+    const col = inWin ? "var(--staff)" : "var(--dim)";
+    for (let st = 0; st >= step; st -= 2) h += `<line x1="${cx - 10}" x2="${cx + 10}" y1="${y(st)}" y2="${y(st)}" stroke="${col}" stroke-width="1.2"/>`;
+    h += `<g transform="translate(${cx} ${y(step)}) rotate(-18)"><ellipse rx="5.9" ry="3.9" fill="${col}"/><ellipse rx="3.2" ry="1.9" fill="${inWin ? "var(--accent-soft)" : "var(--surface)"}" transform="rotate(48)"/></g>`;
+  });
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} 104`);
+  svg.setAttribute("width", W);
+  svg.setAttribute("height", 104);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", `${k.name} major scale from ${notes[0].label} to ${notes[N - 1].label}, performance octave ${w.lo} to ${w.hi}`);
+  svg.innerHTML = h;
+
+  // input columns
+  const cols = document.createElement("div");
+  cols.className = "cols";
+  cols.style.gridTemplateColumns = `${G}px repeat(${N}, ${CW}px)`;
+  cols.append(document.createElement("div"));
+  notes.forEach((n, i) => {
+    const inWin = i >= w.start && i <= w.end;
+    const c = document.createElement("div");
+    c.className = "col " + (inWin ? "in" : "out") + (i === w.start ? " first" : "") + (i === w.end ? " last" : "");
+    c.innerHTML = `<span class="lab">${label(n)}</span><span class="deg">${n.deg === 1 ? "tonic" : "deg " + n.deg}</span>`;
+    c.append(btnChip(n.input[0]));
+    n.input.slice(1).forEach(p => c.append(modChip(p)));
+    if (n.status === "claw") { const f = document.createElement("span"); f.className = "flag"; f.textContent = "claw"; c.append(f); }
+    if (n.status === "reach") { const f = document.createElement("span"); f.className = "flag"; f.textContent = "no reach"; c.append(f); }
+    cols.append(c);
+  });
+
+  const score = document.createElement("div");
+  score.className = "score";
+  score.append(svg, cols);
+  const scroll = document.createElement("div");
+  scroll.className = "scroll";
+  scroll.append(score);
+  card.append(scroll);
+
+  // key-specific note
+  let msg = "";
+  if (w.status === "reach") msg = `<b>No playable octave.</b> The only ${k.name} octave in range starts on low B3, which needs L, the D-pad and the stick at once. Play inside ${k.clean_run.lo}–${k.clean_run.hi} instead.`;
+  else if (w.status === "claw") msg = `<b>Top note needs a claw grip.</b> F5 takes the D-pad and stick together. For a passage without it, stay inside ${k.clean_run.lo}–${k.clean_run.hi}.`;
+  else if (w.kind !== "tonic") msg = `The tonic octave doesn't fit between B3 and F5, so this key is performed from the 5th.`;
+  if (msg) { const p = document.createElement("p"); p.className = "note"; p.innerHTML = msg; card.append(p); }
+  host.append(card);
+});
+</script>
+
+</body></html>
