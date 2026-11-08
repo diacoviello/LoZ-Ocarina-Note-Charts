@@ -26,6 +26,7 @@
   --mid-soft: #f8ecd4;
   --staff: #18203a;
   --dim: #a6aec0;
+  --accent-line: rgb(36 67 163 / .3);
   --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
   --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -37,7 +38,7 @@
     --accent: #93a9ff; --accent-soft: #1e2948; --dpad: #f2b45d; --dpad-soft: #3a2a12;
     --stick: #56d4bb; --stick-soft: #12352f; --warn: #ff8a80; --warn-soft: #3d1a18;
     --ok: #7bd99a; --ok-soft: #15301f; --mid: #f2c46b; --mid-soft: #382a10;
-    --staff: #e5e9f2; --dim: #4c5670; color-scheme: dark;
+    --staff: #e5e9f2; --dim: #4c5670; --accent-line: rgb(147 169 255 / .3); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
@@ -45,7 +46,7 @@
   --accent: #93a9ff; --accent-soft: #1e2948; --dpad: #f2b45d; --dpad-soft: #3a2a12;
   --stick: #56d4bb; --stick-soft: #12352f; --warn: #ff8a80; --warn-soft: #3d1a18;
   --ok: #7bd99a; --ok-soft: #15301f; --mid: #f2c46b; --mid-soft: #382a10;
-  --staff: #e5e9f2; --dim: #4c5670; color-scheme: dark;
+  --staff: #e5e9f2; --dim: #4c5670; --accent-line: rgb(147 169 255 / .3); color-scheme: dark;
 }
 
 body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
@@ -127,7 +128,7 @@ td a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; bord
   font: inherit; color: inherit; background: transparent;
   border: 1px dashed var(--line); border-radius: 7px; cursor: pointer;
 }
-.col.in .pick { border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.col.in .pick { border-color: var(--accent-line); }
 .pick:hover { background: var(--surface); border-style: solid; border-color: var(--accent); }
 .pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .pick[aria-expanded="true"] { background: var(--surface); border: 1px solid var(--accent); }
@@ -163,6 +164,19 @@ td a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; bord
 
 footer { font-size: 13px; color: var(--muted); max-width: 72ch; display: grid; gap: 6px; }
 footer p { margin: 0; }
+
+/* Off-screen copy of the page used to build the PDF download (light colors, no controls). */
+.exporting {
+  position: absolute; left: -10000px; top: 0; width: 820px; max-width: none;
+  padding: 0; display: block; background: var(--paper); color: var(--ink); color-scheme: light;
+}
+.exporting > * + * { margin-top: 0; }
+.exporting .scroll { overflow: visible; }
+.exporting .reset, .exporting .hint, .exporting .picker { display: none !important; }
+.exporting .pick { border: 0; padding: 4px 0 5px; background: none; }
+.exporting .col.edited .pick { border: 2px solid var(--accent); padding: 2px 0 3px; background: var(--surface); }
+.exporting .export-note { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+.exporting .export-note b { color: var(--accent); font-weight: 600; }
 
 @media (max-width: 480px) {
   .mv { display: none; }
@@ -509,6 +523,138 @@ document.addEventListener("pointerdown", e => {
   if (openFor && !picker.contains(e.target) && !openFor.pick.contains(e.target)) closePicker(false);
 });
 window.addEventListener("resize", () => closePicker(false));
+
+/* ---------- personalized downloads ----------
+   The site's "Download a copy" menu calls window.ocarinaExport.pdf() / .markdown(),
+   which build the files from the fingerings currently on screen. */
+const mdInput = inp => [`\`${inp[0]}\``, ...inp.slice(1).map(p => (p.startsWith("D-pad") ? "D-pad " : "Stick ") + p.slice(-1))].join(" + ");
+const thumbText = w => w.stick && w.dpad ? "D-pad + stick" : w.stick ? "Stick only" : w.dpad ? "D-pad only" : "None";
+const kindText = w => w.kind === "tonic" ? "tonic to tonic" : "5th to 5th";
+const hasPicks = () => Object.values(picks).some(p => Object.keys(p).length);
+// "Tap any fingering" only makes sense on the page, not in a downloaded file.
+const forFile = text => text.replace("Tap any fingering to see its alternatives; the full note chart", "The full note chart");
+const today = () => new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+const fileBase = () => "Ocarina Major Key Fingerings" + (hasPicks() ? " (my fingerings)" : "");
+const introNote = () => hasPicks()
+  ? `Your fingerings, saved ${today()}. Notes you changed are marked as your picks; difficulty ratings describe the recommended fingerings.`
+  : `Recommended fingerings, saved ${today()}.`;
+
+function buildMarkdown() {
+  const L = [
+    "# Ocarina Major Key Fingerings", "",
+    "*The Legend of Zelda: Ocarina of Time* (Nintendo Switch 2): performance fingerings for all 12 major keys.", "",
+    introNote().replace("Your fingerings", "**Your fingerings**").replace("your picks", "*your pick*"), "",
+    "## How the fingerings were chosen", "",
+  ];
+  document.querySelectorAll(".rules li").forEach(li => L.push(`- **${li.querySelector("b").textContent}** ${li.querySelector("span").textContent}`));
+  L.push("", "## At a glance, around the circle of fifths", "",
+    "| Key | Perform | Difficulty | Left thumb | Thumb moves |", "|---|---|---|---|:-:|");
+  KEYS.forEach(k => {
+    const w = k.window;
+    L.push(`| [**${k.name}**](#${SLUG(k.name)}) | ${w.lo}–${w.hi} (${kindText(w)}) | ${w.level} | ${thumbText(w)} | ${w.travel} |`);
+  });
+
+  KEYS.forEach(k => {
+    const w = k.window;
+    L.push("", "", `<a id="${SLUG(k.name)}"></a>`, "",
+      `## ${k.name} major${ENH[k.name] ? " · " + ENH[k.name] : ""}`, "",
+      `**${w.level}** · Perform **${w.lo}–${w.hi}** (${kindText(w)}) · Thumb: ${thumbText(w)}`, "",
+      "| Note | Degree | Input |", "|:-:|:-:|---|");
+    const outside = [];
+    k.notes.forEach((n, i) => {
+      const inp = chosen(k, n), f = flagOf(inp);
+      let cell = mdInput(inp) + (f === "claw" ? " *(claw grip)*" : f === "reach" ? " *(out of reach)*" : "");
+      if (keyOf(inp) !== keyOf(n.input)) cell += ` · *your pick* (recommended: ${mdInput(n.input)})`;
+      if (i >= w.start && i <= w.end) L.push(`| **${n.label}** | ${ROMAN[n.deg]} | ${cell} |`);
+      else outside.push(`${n.label} ${ROMAN[n.deg]} (${cell})`);
+    });
+    if (outside.length) L.push("", "Also in range outside the octave: " + outside.join(", "));
+    const note = document.getElementById(SLUG(k.name)).querySelector(".note");
+    if (note) L.push("", note.textContent);
+  });
+
+  L.push("", "", "---", "");
+  document.querySelectorAll("footer p").forEach(p => L.push(`*${forFile(p.textContent)}*`, ""));
+  return new Blob([L.join("\n")], { type: "text/markdown;charset=utf-8" });
+}
+
+// Print palette (from the @media print block), applied to the off-screen copy.
+const LIGHT = {
+  "--paper": "#ffffff", "--surface": "#ffffff", "--ink": "#18203a", "--muted": "#5a6479", "--line": "#d3d9e4",
+  "--accent": "#2443a3", "--accent-soft": "#e8edf9", "--accent-line": "rgb(36 67 163 / .3)",
+  "--dpad": "#9a5a07", "--dpad-soft": "#fbefdc", "--stick": "#0c6e60", "--stick-soft": "#dcf2ee",
+  "--warn": "#b3261e", "--warn-soft": "#fbe3e1", "--ok": "#1d6b35", "--ok-soft": "#dff1e4",
+  "--mid": "#8a5a00", "--mid-soft": "#f8ecd4", "--staff": "#18203a", "--dim": "#a6aec0",
+};
+const LIBS = [
+  "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+];
+let libsReady = null;
+function loadLibs() {
+  if (!libsReady) {
+    libsReady = Promise.all(LIBS.map(src => new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error("Couldn't load " + src));
+      document.head.append(s);
+    }))).catch(err => { libsReady = null; throw err; });
+  }
+  return libsReady;
+}
+
+async function buildPdf() {
+  closePicker(false);
+  await Promise.all([loadLibs(), document.fonts.ready]);
+
+  // Copy the page into a light-themed, off-screen stage: one child per block that must not split across pages.
+  const stage = document.createElement("div");
+  stage.className = "wrap exporting";
+  for (const [name, value] of Object.entries(LIGHT)) stage.style.setProperty(name, value);
+  const head = document.querySelector(".wrap > header").cloneNode(true);
+  const note = document.createElement("p");
+  note.className = "export-note";
+  note.innerHTML = hasPicks() ? introNote().replace("Your fingerings", "<b>Your fingerings</b>").replace("your picks", "outlined") : introNote();
+  head.append(note);
+  stage.append(head, ...[...document.querySelectorAll(".wrap > .panel, #keys > .card, .wrap > footer")].map(el => el.cloneNode(true)));
+  stage.querySelectorAll("footer p").forEach(p => { p.textContent = forFile(p.textContent); });
+  document.body.append(stage);
+
+  try {
+    // Charts are drawn as SVG images, which can't see the page's CSS, so bake in the colors and fonts.
+    const cs = getComputedStyle(stage);
+    stage.querySelectorAll("svg").forEach(svg => {
+      svg.setAttribute("color", getComputedStyle(svg).color);
+      svg.querySelectorAll("*").forEach(el => {
+        for (const a of [...el.attributes]) {
+          if (a.value.includes("var(")) el.setAttribute(a.name, a.value.replace(/var\((--[\w-]+)\)/g, (_, v) => cs.getPropertyValue(v).trim()));
+        }
+      });
+    });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: "pt", format: "letter" });
+    const M = 32, pageW = 612, pageH = 792, scale = (pageW - 2 * M) / stage.offsetWidth, GAP = 14;
+    let y = M;
+    for (const block of stage.children) {
+      const canvas = await window.html2canvas(block, { scale: 2, backgroundColor: "#ffffff", logging: false });
+      const h = block.offsetHeight * scale;
+      if (y + h > pageH - M && y > M) { pdf.addPage(); y = M; }
+      pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", M, y, pageW - 2 * M, h);
+      y += h + GAP;
+    }
+    pdf.setProperties({ title: "Ocarina Major Key Fingerings" });
+    return pdf.output("blob");
+  } finally {
+    stage.remove();
+  }
+}
+
+window.ocarinaExport = {
+  async pdf() { return { blob: await buildPdf(), filename: fileBase() + ".pdf" }; },
+  async md() { return { blob: buildMarkdown(), filename: fileBase() + ".md" }; },
+};
 </script>
 
 </body></html>

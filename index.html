@@ -267,8 +267,10 @@ const CHARTS = [
     label: "Major Key Fingerings",
     short: "Major keys",
     page: "Ocarina Major Key Fingerings.html",
-    pdf: { file: "downloadable-files/Ocarina Major Key Fingerings.pdf", note: "Printable · 315 KB" },
-    md:  { file: "downloadable-files/Ocarina Major Key Fingerings.md", note: "Plain text · 2 KB" },
+    // Built from the fingerings on screen (the page's window.ocarinaExport); the files are a fallback.
+    generated: true,
+    pdf: { file: "downloadable-files/Ocarina Major Key Fingerings.pdf", note: "Printable · with your fingerings" },
+    md:  { file: "downloadable-files/Ocarina Major Key Fingerings.md", note: "Plain text · with your fingerings" },
   },
 ];
 
@@ -278,6 +280,7 @@ const btn = document.getElementById("dl-btn");
 const menu = document.getElementById("dl-menu");
 const enc = (path) => path.split("/").map(encodeURIComponent).join("/");
 const frames = {};
+let current = null;
 
 // Build tabs. Frames are created on first visit and kept, so switching back keeps your scroll position.
 for (const c of CHARTS) {
@@ -294,6 +297,7 @@ for (const c of CHARTS) {
 
 function show(id) {
   const chart = CHARTS.find((c) => c.id === id) || CHARTS[0];
+  current = chart;
 
   if (!frames[chart.id]) {
     const f = document.createElement("iframe");
@@ -338,6 +342,44 @@ document.addEventListener("click", (e) => { if (!e.target.closest(".dl")) closeM
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(true); });
 // Clicking inside a chart frame doesn't reach this document, so close the menu when the page loses focus.
 window.addEventListener("blur", () => closeMenu());
+
+// Personalized downloads: ask the chart page to build the file instead of fetching the static copy.
+const btnLabel = btn.querySelector(".long"), btnShort = btn.querySelector(".short");
+function setBusy(text) {
+  btn.disabled = !!text;
+  btn.style.cursor = text ? "progress" : "";
+  btnLabel.textContent = text || "Download a copy";
+  btnShort.textContent = text ? "Building…" : "Download";
+}
+function saveBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+for (const kind of ["pdf", "md"]) {
+  const link = document.getElementById("dl-" + kind);
+  link.addEventListener("click", async (e) => {
+    const api = current.generated && frames[current.id]?.contentWindow?.ocarinaExport;
+    if (!api) return; // not ready: the link downloads the static file
+    e.preventDefault();
+    closeMenu();
+    setBusy(kind === "pdf" ? "Building PDF…" : "Building file…");
+    try {
+      const { blob, filename } = await api[kind]();
+      saveBlob(blob, filename);
+    } catch (err) {
+      console.error(err);
+      saveBlob(await (await fetch(link.href)).blob(), link.download);
+    } finally {
+      setBusy(null);
+    }
+  });
+}
 
 window.addEventListener("hashchange", () => show(location.hash.slice(1)));
 show(location.hash.slice(1));

@@ -2,7 +2,7 @@
 
 Note and fingering charts for the ocarina in *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2.
 
-**View the charts online: <https://diacoviello.github.io/LoZ-Ocarina-Note-Charts/>.** Each chart has its own tab, and **Download a copy** gives you that chart as a PDF or Markdown file.
+**View the charts online: <https://diacoviello.github.io/LoZ-Ocarina-Note-Charts/>.** Each chart has its own tab, and **Download a copy** gives you that chart as a PDF or Markdown file. On the Major Key Fingerings tab you can swap any note's fingering, and the downloads are built in your browser with your picks included.
 
 The ocarina has five note buttons (L, R, A, Y, X). The D-pad bends a note by a half step and the left stick bends it by a whole step, and you can combine the two. That gives **19 pitches from 45 inputs, across the range B3–F5**. These charts show every way to play each pitch, plus practical fingerings for playing all 12 major scales in tempo.
 
