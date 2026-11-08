@@ -308,7 +308,9 @@ KEYS.forEach(k => {
 
 /* ---------- key cards ---------- */
 const CW = 52, SP = 8;
-const y = st => 78 - (st - 2) * (SP / 2);
+const TOP = 8; // extra room above the staff for the Roman numeral row
+const y = st => TOP + 78 - (st - 2) * (SP / 2);
+const ROMAN = [null, "I", "ii", "iii", "IV", "V", "vi", "vii°"];
 const host = document.getElementById("keys");
 
 KEYS.forEach(k => {
@@ -338,7 +340,7 @@ KEYS.forEach(k => {
   refreshCustom();
 
   // staff
-  let h = `<rect x="${G + w.start * CW}" y="0" width="${(w.end - w.start + 1) * CW}" height="116" rx="8" fill="var(--accent-soft)"/>`;
+  let h = `<rect x="${G + w.start * CW}" y="0" width="${(w.end - w.start + 1) * CW}" height="${116 + TOP}" rx="8" fill="var(--accent-soft)"/>`;
   for (let st = 2; st <= 10; st += 2) h += `<line x1="2" x2="${W - 2}" y1="${y(st)}" y2="${y(st)}" stroke="var(--staff)" stroke-width="1"/>`;
   h += `<text x="4" y="${y(2) + 8}" font-family="var(--f-music)" font-size="${SP * 5.2}" fill="var(--staff)">𝄞</text>`;
   for (let i = 0; i < sigN; i++) {
@@ -351,15 +353,16 @@ KEYS.forEach(k => {
     const cx = G + i * CW + CW / 2;
     const inWin = i >= w.start && i <= w.end;
     const col = inWin ? "var(--staff)" : "var(--dim)";
+    h += `<text x="${cx}" y="20" text-anchor="middle" font-family="var(--f-display)" font-weight="700" font-size="16" fill="${col}">${ROMAN[n.deg]}</text>`;
     for (let st = 0; st >= step; st -= 2) h += `<line x1="${cx - 10}" x2="${cx + 10}" y1="${y(st)}" y2="${y(st)}" stroke="${col}" stroke-width="1.2"/>`;
     h += `<g transform="translate(${cx} ${y(step)}) rotate(-18)"><ellipse rx="5.9" ry="3.9" fill="${col}"/><ellipse rx="3.2" ry="1.9" fill="${inWin ? "var(--accent-soft)" : "var(--surface)"}" transform="rotate(48)"/></g>`;
   });
   const svg = document.createElementNS(NS, "svg");
-  svg.setAttribute("viewBox", `0 0 ${W} 104`);
+  svg.setAttribute("viewBox", `0 0 ${W} ${104 + TOP}`);
   svg.setAttribute("width", W);
-  svg.setAttribute("height", 104);
+  svg.setAttribute("height", 104 + TOP);
   svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", `${k.name} major scale from ${notes[0].label} to ${notes[N - 1].label}, performance octave ${w.lo} to ${w.hi}`);
+  svg.setAttribute("aria-label", `${k.name} major scale from ${notes[0].label} to ${notes[N - 1].label}, performance octave ${w.lo} to ${w.hi}. Scale degrees: ${notes.map(n => ROMAN[n.deg]).join(" ")}`);
   svg.innerHTML = h;
 
   // input columns
