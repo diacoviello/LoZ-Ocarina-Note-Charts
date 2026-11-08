@@ -13,8 +13,7 @@
 *.swp
 *~
 
-/Ocarina Charts/
-Ocarina Major Key Fingerings.md
-Ocarina Major Key Fingerings.pdf
-Ocarina Note Chart.pdf
-Zelda Switch 2 Ocarina Note Chart.md
+# pdfs
+*.pdf
+*.md
+
