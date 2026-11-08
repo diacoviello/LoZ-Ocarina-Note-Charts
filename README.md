@@ -11,14 +11,10 @@ The ocarina has five note buttons (L, R, A, Y, X). The D-pad bends a note by a h
 | [Ocarina Note Chart](Ocarina%20Charts/Ocarina%20Note%20Chart.md) | Every pitch from low to high, shown on a staff with every input that plays it. The easiest input for each pitch is marked. |
 | [Ocarina Major Key Fingerings](Ocarina%20Charts/Ocarina%20Major%20Key%20Fingerings.md) | Scale fingerings for all 12 major keys around the circle of fifths, with difficulty ratings and the octave to perform each key in. |
 
-The Markdown versions in [`Ocarina Charts/`](Ocarina%20Charts/) display directly on GitHub. The other formats are in the repo root:
+The Markdown versions in [`Ocarina Charts/`](Ocarina%20Charts/) display directly on GitHub. Interactive HTML versions are in the repo root. Download one and open it in a browser. The note chart can play a reference tone for each pitch.
 
-- **HTML**: interactive versions that open in a browser. The note chart can play a reference tone for each pitch.
-  - `Switch 2 Ocarina Note Chart.html` / `Zelda Switch 2 Ocarina Note Chart.html`
-  - `Ocarina Major Key Fingerings.html`
-- **PDF**: printable versions.
-  - `Ocarina Note Chart.pdf`
-  - `Ocarina Major Key Fingerings.pdf`
+- `Zelda Switch 2 Ocarina Note Chart.html`
+- `Ocarina Major Key Fingerings.html`
 
 ## Quick reference
 
@@ -49,9 +45,7 @@ Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo 
 │   ├── Ocarina Note Chart.md            # full note chart (renders on GitHub)
 │   ├── Ocarina Major Key Fingerings.md  # 12 major keys (renders on GitHub)
 │   └── images/                          # staff images used by the Markdown charts
-├── *.html                               # interactive browser versions
-├── *.pdf                                # printable versions
-└── *.md (root)                          # plain-text exports of the HTML pages
+└── *.html                               # interactive browser versions
 ```
 
 ---

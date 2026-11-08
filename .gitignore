@@ -13,7 +13,9 @@
 *.swp
 *~
 
-# pdfs
+# PDFs and root-level Markdown exports
+# (README.md and the charts in "Ocarina Charts/" stay tracked)
 *.pdf
-*.md
+/*.md
+!/README.md
 
