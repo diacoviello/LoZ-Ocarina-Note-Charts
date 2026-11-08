@@ -73,13 +73,19 @@ body {
 }
 @font-face { font-family: "Hylia Serif"; src: url("fonts/HyliaSerifBeta-Regular.otf") format("opentype"); font-display: swap; }
 @font-face { font-family: "Hylian Symbols"; src: url("fonts/HylianSymbols.ttf") format("truetype"); font-display: block; }
+@font-face { font-family: "Triforce"; src: url("fonts/Triforce.ttf") format("truetype"); font-display: swap; }
+/* Triforce for the site title, Hylia Serif for everything else (the fonts after it fill in missing characters). */
+:root {
+  --f-body: "Hylia Serif", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "Hylia Serif", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
 .brand {
   align-self: center;
   display: flex;
   align-items: center;
   gap: 8px;
   margin: 0;
-  font: 400 18px "Hylia Serif", Georgia, serif;
+  font: 400 20px "Triforce", "Hylia Serif", Georgia, serif;
   font-synthesis: none;
   color: var(--ink);
   white-space: nowrap;

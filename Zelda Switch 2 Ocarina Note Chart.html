@@ -165,10 +165,19 @@ footer p { margin: 0; max-width: 70ch; }
 /* ---------- Hylian type and ornaments (fonts/ folder) ---------- */
 @font-face { font-family: "Hylia Serif"; src: url("fonts/HyliaSerifBeta-Regular.otf") format("opentype"); font-display: swap; }
 @font-face { font-family: "Hylian Symbols"; src: url("fonts/HylianSymbols.ttf") format("truetype"); font-display: block; }
-:root { --f-hylia: "Hylia Serif", "Bodoni Moda", Georgia, serif; }
-/* Hylia Serif has one weight; turn off faux bold. */
+@font-face { font-family: "Triforce"; src: url("fonts/Triforce.ttf") format("truetype"); font-display: swap; }
+/* Triforce for the page title, Hylia Serif for everything else. The fonts after Hylia Serif
+   only fill in characters it doesn't have (↑ ↓ ♭ ♯ · – °). */
+:root {
+  --f-main: "Triforce", "Hylia Serif", Georgia, serif;
+  --f-hylia: "Hylia Serif", "Bodoni Moda", Georgia, serif;
+  --f-display: "Hylia Serif", "Bodoni Moda", "Didot", Georgia, serif;
+  --f-body: "Hylia Serif", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "Hylia Serif", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+/* Headings: single-weight fonts, so turn off faux bold. */
 h1, .panel h2 { font-family: var(--f-hylia); font-weight: 400; font-synthesis: none; }
-h1 { letter-spacing: 0; line-height: 1.1; }
+h1 { font-family: var(--f-main); letter-spacing: .01em; line-height: 1.1; }
 .panel h2 { font-size: 20px; letter-spacing: .01em; text-transform: none; color: var(--ink); }
 
 .glyph { font-family: "Hylian Symbols"; font-weight: 400; font-style: normal; line-height: 1; letter-spacing: 0; text-transform: none; user-select: none; }

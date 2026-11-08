@@ -168,10 +168,19 @@ footer p { margin: 0; max-width: 72ch; }
 /* ---------- Hylian type and ornaments (fonts/ folder) ---------- */
 @font-face { font-family: "Hylia Serif"; src: url("fonts/HyliaSerifBeta-Regular.otf") format("opentype"); font-display: swap; }
 @font-face { font-family: "Hylian Symbols"; src: url("fonts/HylianSymbols.ttf") format("truetype"); font-display: block; }
-:root { --f-hylia: "Hylia Serif", "Bodoni Moda", Georgia, serif; }
-/* Hylia Serif has one weight; turn off faux bold. ♭ ♯ · fall back to the serif after it. */
+@font-face { font-family: "Triforce"; src: url("fonts/Triforce.ttf") format("truetype"); font-display: swap; }
+/* Triforce for the page title, Hylia Serif for everything else. The fonts after Hylia Serif
+   only fill in characters it doesn't have (↑ ↓ ♭ ♯ · – °). */
+:root {
+  --f-main: "Triforce", "Hylia Serif", Georgia, serif;
+  --f-hylia: "Hylia Serif", "Bodoni Moda", Georgia, serif;
+  --f-display: "Hylia Serif", "Bodoni Moda", "Didot", Georgia, serif;
+  --f-body: "Hylia Serif", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "Hylia Serif", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+/* Headings: single-weight fonts, so turn off faux bold. */
 h1, .panel h2, .card-head h3 { font-family: var(--f-hylia); font-weight: 400; font-synthesis: none; }
-h1 { letter-spacing: 0; line-height: 1.1; }
+h1 { font-family: var(--f-main); letter-spacing: .01em; line-height: 1.1; }
 .panel h2 { font-size: 20px; letter-spacing: .01em; text-transform: none; color: var(--ink); }
 .card-head h3 { font-size: 32px; }
 /* Hylia Serif has no ♭/♯; size the fallback glyph to sit with the letter. */
@@ -664,6 +673,16 @@ async function buildPdf() {
           if (a.value.includes("var(")) el.setAttribute(a.name, a.value.replace(/var\((--[\w-]+)\)/g, (_, v) => cs.getPropertyValue(v).trim()));
         }
       });
+    });
+
+    // Staff drawings become images that can't load web fonts, so embed Hylia Serif in each one.
+    const hylia = await fetch("fonts/HyliaSerifBeta-Regular.otf").then(r => r.blob()).then(b => new Promise(res => {
+      const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b);
+    })).catch(() => null);
+    if (hylia) stage.querySelectorAll(".score svg").forEach(svg => {
+      const style = document.createElementNS(NS, "style");
+      style.textContent = `@font-face { font-family: "Hylia Serif"; src: url(${hylia}) format("opentype"); }`;
+      svg.prepend(style);
     });
 
     const { jsPDF } = window.jspdf;
