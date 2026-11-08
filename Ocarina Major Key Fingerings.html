@@ -187,9 +187,9 @@ h1 { font-family: var(--f-main); letter-spacing: .01em; line-height: 1.1; }
 :root { --f-note: "Triforce", "Bodoni Moda", Georgia, serif; }
 .col .lab { font-family: var(--f-note); font-weight: 400; font-synthesis: none; font-size: 17px; }
 /* Same capitals in the "At a glance" table: the key names and the note letters in each range. */
-td a, .range .nn { font-family: var(--f-note); font-weight: 400; font-synthesis: none; }
-td a { font-size: 21px; }
-.range .nn { font-size: 15px; }
+td a, .range .nn, .card-head .nn { font-family: var(--f-note); font-weight: 400; font-synthesis: none; }
+td a, .range .nn { font-size: 27px; line-height: 1.1; }
+.card-head .facts .nn { font-size: 16px; }
 /* Hylia Serif has no ♭/♯; size the fallback glyph to sit with the letter. */
 .card-head h3 .acc { font-family: var(--f-display); font-size: .62em; margin-left: 1px; vertical-align: .32em; }
 
@@ -392,10 +392,10 @@ KEYS.forEach((k, ki) => {
   card.innerHTML = `
     <span class="glyph emblem" aria-hidden="true">${EMBLEMS[ki]}</span>
     <div class="card-head">
-      <h3>${k.name.replace(/[♭♯]/g, a => `<span class="acc">${a}</span>`)}<small>major${ENH[k.name] ? " · " + ENH[k.name] : ""}</small></h3>
+      <h3>${noteLetters(k.name).replace(/[♭♯]/g, a => `<span class="acc">${a}</span>`)}<small>major${ENH[k.name] ? " · " + ENH[k.name] : ""}</small></h3>
       <div class="facts">
         <span class="pill ${w.level.split(" ")[0]}">${w.level}</span>
-        <span>Perform <b>${w.lo}–${w.hi}</b> (${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"})</span>
+        <span>Perform <b>${noteLetters(w.lo)}–${noteLetters(w.hi)}</b> (${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"})</span>
         <span>Thumb: ${thumb}</span>
         <span class="custom" hidden>Your fingerings <button class="reset" type="button">Reset to recommended</button></span>
       </div>
