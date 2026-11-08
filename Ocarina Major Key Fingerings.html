@@ -183,6 +183,9 @@ h1, .panel h2, .card-head h3 { font-family: var(--f-hylia); font-weight: 400; fo
 h1 { font-family: var(--f-main); letter-spacing: .01em; line-height: 1.1; }
 .panel h2 { font-size: 20px; letter-spacing: .01em; text-transform: none; color: var(--ink); }
 .card-head h3 { font-size: 32px; }
+/* Note names on the cards use Triforce's decorative capitals; ♯ ♭ come from the serif after it. */
+:root { --f-note: "Triforce", "Bodoni Moda", Georgia, serif; }
+.col .lab { font-family: var(--f-note); font-weight: 400; font-synthesis: none; font-size: 17px; }
 /* Hylia Serif has no ♭/♯; size the fallback glyph to sit with the letter. */
 .card-head h3 .acc { font-family: var(--f-display); font-size: .62em; margin-left: 1px; vertical-align: .32em; }
 
