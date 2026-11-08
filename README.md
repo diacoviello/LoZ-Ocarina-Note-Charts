@@ -2,6 +2,8 @@
 
 Note and fingering charts for the ocarina in *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2.
 
+**View the charts online: <https://diacoviello.github.io/LoZ-Ocarina-Note-Charts/>.** Each chart has its own tab, and **Download a copy** gives you that chart as a PDF or Markdown file.
+
 The ocarina has five note buttons (L, R, A, Y, X). The D-pad bends a note by a half step and the left stick bends it by a whole step, and you can combine the two. That gives **19 pitches from 45 inputs, across the range B3–F5**. These charts show every way to play each pitch, plus practical fingerings for playing all 12 major scales in tempo.
 
 ## Charts
@@ -41,12 +43,17 @@ Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo 
 
 ```
 .
+├── index.html                           # GitHub Pages site: chart tabs + download menu
+├── *.html                               # interactive chart pages shown in the site's tabs
+├── downloadable-files/                  # PDF and Markdown copies offered by "Download a copy"
 ├── Ocarina Charts/
 │   ├── Ocarina Note Chart.md            # full note chart (renders on GitHub)
 │   ├── Ocarina Major Key Fingerings.md  # 12 major keys (renders on GitHub)
 │   └── images/                          # staff images used by the Markdown charts
-└── *.html                               # interactive browser versions
+└── .nojekyll                            # serve files as-is (keeps .md downloads raw)
 ```
+
+To add a chart to the site, put its HTML page in the root, its PDF and Markdown copies in `downloadable-files/`, and add an entry to the `CHARTS` list near the bottom of `index.html`.
 
 ---
 

@@ -19,3 +19,6 @@
 /*.md
 !/README.md
 
+
+# ...except the copies offered by the site's "Download a copy" menu
+!/downloadable-files/*.pdf
