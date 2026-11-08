@@ -118,6 +118,49 @@ td a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; bord
 .note { margin: 0; padding: 0 18px 16px; font-size: 13px; color: var(--muted); max-width: 80ch; }
 .note b { color: var(--ink); font-weight: 600; }
 
+/* swappable fingerings */
+.hint { margin: -12px 0 0; font-size: 14px; color: var(--muted); max-width: 72ch; }
+.hint b { color: var(--ink); font-weight: 600; }
+.pick {
+  display: grid; justify-items: center; align-content: start; gap: 4px;
+  width: 48px; padding: 4px 0 5px; margin: 0;
+  font: inherit; color: inherit; background: transparent;
+  border: 1px dashed var(--line); border-radius: 7px; cursor: pointer;
+}
+.col.in .pick { border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.pick:hover { background: var(--surface); border-style: solid; border-color: var(--accent); }
+.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.pick[aria-expanded="true"] { background: var(--surface); border: 1px solid var(--accent); }
+.col.edited .pick { border: 2px solid var(--accent); padding: 3px 0 4px; background: var(--surface); }
+.col.edited .deg { color: var(--accent); font-weight: 600; }
+
+.custom { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--accent); font-weight: 600; }
+.custom[hidden] { display: none; }
+.reset {
+  font: 500 13px var(--f-body); color: var(--muted); background: none; border: 0; padding: 0;
+  text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+}
+.reset:hover { color: var(--ink); }
+.reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+.picker {
+  position: absolute; z-index: 20; width: max-content; min-width: 210px; max-width: calc(100vw - 16px);
+  margin: 0; padding: 6px; list-style: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 10px 28px rgb(0 0 0 / .22);
+}
+.picker[hidden] { display: none; }
+.picker-head { padding: 6px 8px 8px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.picker-head b { font-family: var(--f-display); font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.opt {
+  display: flex; align-items: center; gap: 4px; width: 100%; min-height: 40px; padding: 6px 8px;
+  font: inherit; color: var(--ink); text-align: left; background: none; border: 0; border-radius: 6px; cursor: pointer;
+}
+.opt:hover, .opt:focus-visible { background: var(--accent-soft); outline: none; }
+.opt .check { width: 16px; flex: none; color: var(--accent); font-weight: 700; text-align: center; }
+.opt .tags { margin-left: auto; padding-left: 12px; display: inline-flex; gap: 6px; align-items: center; }
+.opt .rec { font-family: var(--f-mono); font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ok); }
+
 footer { font-size: 13px; color: var(--muted); max-width: 72ch; display: grid; gap: 6px; }
 footer p { margin: 0; }
 
@@ -138,6 +181,8 @@ footer p { margin: 0; }
   .card, .panel { break-inside: avoid; }
   .scroll { overflow: visible; }
   .summary { break-after: page; }
+  .hint, .reset, .picker { display: none !important; }
+  .pick, .col.edited .pick { border: 0; padding: 4px 0 5px; background: none; }
 }
 </style>
 
@@ -168,11 +213,14 @@ footer p { margin: 0; }
     </div>
   </section>
 
+  <p class="hint"><b>Make it yours.</b> Tap any fingering under a staff to swap in another input for that note. Each key starts on the recommended fingerings. Your picks are saved in this browser, and the difficulty ratings always describe the recommended set.</p>
+
   <section class="keys" id="keys" aria-label="Keys"></section>
+  <div class="picker" id="picker" role="menu" hidden></div>
 
   <footer>
     <p>Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo hasn't published the remake's sounding octave, so treat octave numbers as written pitch.</p>
-    <p>Difficulty scores the performance octave played up and down: each D-pad press, each stick tilt, each switch of the thumb between D-pad and stick, and claw-grip notes. Alternative inputs for every note are on the full note chart.</p>
+    <p>Difficulty scores the performance octave played up and down: each D-pad press, each stick tilt, each switch of the thumb between D-pad and stick, and claw-grip notes. Tap any fingering to see its alternatives; the full note chart lists every input for every pitch.</p>
   </footer>
 </div>
 
@@ -202,6 +250,45 @@ function btnChip(b) {
   return s;
 }
 const label = n => `${n.letter}${n.acc === 1 ? "♯" : n.acc === -1 ? "♭" : ""}<sub>${n.oct}</sub>`;
+
+/* ---------- alternative fingerings ---------- */
+// Same model as the full note chart: five buttons, bent by the D-pad (±1) and stick (±2), which stack.
+const BUTTONS = { L: 62, R: 65, A: 69, Y: 71, X: 74 };
+const BENDS = {
+  "-3": [["D-pad↓", "stick↓"]],
+  "-2": [["stick↓"]],
+  "-1": [["D-pad↓"], ["D-pad↑", "stick↓"]],
+  "0": [[]],
+  "1": [["D-pad↑"], ["D-pad↓", "stick↑"]],
+  "2": [["stick↑"]],
+  "3": [["D-pad↑", "stick↑"]],
+};
+const uses = (inp, kind) => inp.some(p => p.startsWith(kind));
+// D-pad + stick together needs a claw grip; with L also held, the left hand can't reach.
+const flagOf = inp => uses(inp, "D-pad") && uses(inp, "stick") ? (inp[0] === "L" ? "reach" : "claw") : null;
+const keyOf = inp => inp.join(" ");
+const effort = inp => [inp.length + (flagOf(inp) ? 10 : 0), uses(inp, "stick") ? 1 : 0];
+function alternatives(midi) {
+  const out = [];
+  for (const [b, base] of Object.entries(BUTTONS)) for (const m of BENDS[midi - base] || []) out.push([b, ...m]);
+  return out.sort((a, b) => { const x = effort(a), z = effort(b); return x[0] - z[0] || x[1] - z[1]; });
+}
+const say = inp => inp.map(p => p.replace("↑", " up").replace("↓", " down")).join(" + ");
+
+// Your picks live in this browser only: { "C": { "64": "R D-pad↓" }, ... }
+const STORE = "ocarina-major-key-fingerings-v1";
+let picks = {};
+try { picks = JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { picks = {}; }
+function savePicks() { try { localStorage.setItem(STORE, JSON.stringify(picks)); } catch (e) { /* storage blocked: picks last for this visit */ } }
+function chosen(k, n) {
+  const saved = picks[k.name] && picks[k.name][n.midi];
+  return (saved && alternatives(n.midi).find(a => keyOf(a) === saved)) || n.input;
+}
+function fillInputs(el, inp) {
+  el.replaceChildren(btnChip(inp[0]), ...inp.slice(1).map(modChip));
+  const f = flagOf(inp);
+  if (f) { const s = document.createElement("span"); s.className = "flag"; s.textContent = f === "claw" ? "claw" : "no reach"; el.append(s); }
+}
 const plain = s => s.replace(/(\d)$/, "$1");
 
 /* ---------- summary ---------- */
@@ -226,6 +313,7 @@ const host = document.getElementById("keys");
 
 KEYS.forEach(k => {
   const w = k.window, notes = k.notes, N = notes.length;
+  const renders = [];
   const sigN = k.count;
   const sharpKey = k.sign === 0;
   const G = 34 + sigN * 9 + 10;
@@ -242,8 +330,12 @@ KEYS.forEach(k => {
         <span class="pill ${w.level.split(" ")[0]}">${w.level}</span>
         <span>Perform <b>${w.lo}–${w.hi}</b> (${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"})</span>
         <span>Thumb: ${thumb}</span>
+        <span class="custom" hidden>Your fingerings <button class="reset" type="button">Reset to recommended</button></span>
       </div>
     </div>`;
+  const customEl = card.querySelector(".custom");
+  const refreshCustom = () => { customEl.hidden = !(picks[k.name] && Object.keys(picks[k.name]).length); };
+  refreshCustom();
 
   // staff
   let h = `<rect x="${G + w.start * CW}" y="0" width="${(w.end - w.start + 1) * CW}" height="116" rx="8" fill="var(--accent-soft)"/>`;
@@ -280,11 +372,29 @@ KEYS.forEach(k => {
     const c = document.createElement("div");
     c.className = "col " + (inWin ? "in" : "out") + (i === w.start ? " first" : "") + (i === w.end ? " last" : "");
     c.innerHTML = `<span class="lab">${label(n)}</span><span class="deg">${n.deg === 1 ? "tonic" : "deg " + n.deg}</span>`;
-    c.append(btnChip(n.input[0]));
-    n.input.slice(1).forEach(p => c.append(modChip(p)));
-    if (n.status === "claw") { const f = document.createElement("span"); f.className = "flag"; f.textContent = "claw"; c.append(f); }
-    if (n.status === "reach") { const f = document.createElement("span"); f.className = "flag"; f.textContent = "no reach"; c.append(f); }
+    const pick = document.createElement("button");
+    pick.type = "button";
+    pick.className = "pick";
+    pick.setAttribute("aria-haspopup", "menu");
+    pick.setAttribute("aria-expanded", "false");
+    c.append(pick);
+    const render = () => {
+      const inp = chosen(k, n);
+      const edited = keyOf(inp) !== keyOf(n.input);
+      fillInputs(pick, inp);
+      c.classList.toggle("edited", edited);
+      pick.setAttribute("aria-label", `${n.label}: ${say(inp)}${edited ? " (your pick)" : " (recommended)"}. Change fingering`);
+    };
+    render();
+    renders.push(render);
+    pick.addEventListener("click", () => openPicker(pick, k, n, () => { render(); refreshCustom(); }));
     cols.append(c);
+  });
+  customEl.querySelector(".reset").addEventListener("click", () => {
+    delete picks[k.name];
+    savePicks();
+    renders.forEach(r => r());
+    refreshCustom();
   });
 
   const score = document.createElement("div");
@@ -303,6 +413,99 @@ KEYS.forEach(k => {
   if (msg) { const p = document.createElement("p"); p.className = "note"; p.innerHTML = msg; card.append(p); }
   host.append(card);
 });
+
+/* ---------- fingering picker ---------- */
+const picker = document.getElementById("picker");
+let openFor = null; // { pick, scroller }
+
+function closePicker(returnFocus) {
+  if (!openFor) return;
+  const { pick, scroller } = openFor;
+  picker.hidden = true;
+  pick.setAttribute("aria-expanded", "false");
+  scroller.removeEventListener("scroll", onScrollerScroll);
+  openFor = null;
+  if (returnFocus) pick.focus();
+}
+const onScrollerScroll = () => closePicker(false);
+
+function openPicker(pick, k, n, onChange) {
+  const wasOpen = openFor && openFor.pick === pick;
+  closePicker(false);
+  if (wasOpen) return;
+
+  const current = keyOf(chosen(k, n));
+  const rec = keyOf(n.input);
+  const alts = alternatives(n.midi);
+  // Recommended first, then the rest from easiest to hardest.
+  alts.sort((a, b) => (keyOf(b) === rec) - (keyOf(a) === rec));
+
+  picker.innerHTML = `<div class="picker-head">${k.name} major · <b>${label(n)}</b></div>`;
+  for (const inp of alts) {
+    const id = keyOf(inp);
+    const opt = document.createElement("button");
+    opt.type = "button";
+    opt.className = "opt";
+    opt.setAttribute("role", "menuitemradio");
+    opt.setAttribute("aria-checked", String(id === current));
+    opt.setAttribute("aria-label", say(inp) + (id === rec ? ", recommended" : "") + (flagOf(inp) === "claw" ? ", claw grip" : flagOf(inp) === "reach" ? ", out of reach" : ""));
+    const check = document.createElement("span");
+    check.className = "check";
+    check.textContent = id === current ? "✓" : "";
+    opt.append(check, btnChip(inp[0]), ...inp.slice(1).map(modChip));
+    const tags = document.createElement("span");
+    tags.className = "tags";
+    const f = flagOf(inp);
+    if (f) { const s = document.createElement("span"); s.className = "flag"; s.textContent = f === "claw" ? "claw" : "no reach"; tags.append(s); }
+    if (id === rec) { const s = document.createElement("span"); s.className = "rec"; s.textContent = "Recommended"; tags.append(s); }
+    opt.append(tags);
+    opt.addEventListener("click", () => {
+      if (id === rec) {
+        if (picks[k.name]) { delete picks[k.name][n.midi]; if (!Object.keys(picks[k.name]).length) delete picks[k.name]; }
+      } else {
+        (picks[k.name] = picks[k.name] || {})[n.midi] = id;
+      }
+      savePicks();
+      onChange();
+      closePicker(true);
+    });
+    picker.append(opt);
+  }
+
+  picker.hidden = false;
+  pick.setAttribute("aria-expanded", "true");
+  const scroller = pick.closest(".scroll");
+  scroller.addEventListener("scroll", onScrollerScroll, { passive: true });
+  openFor = { pick, scroller };
+
+  // Place below the fingering (above if there's no room), kept inside the page width.
+  const r = pick.getBoundingClientRect();
+  const pw = picker.offsetWidth, ph = picker.offsetHeight;
+  const vw = document.documentElement.clientWidth;
+  let left = r.left + r.width / 2 - pw / 2;
+  left = Math.max(8, Math.min(left, vw - pw - 8));
+  let top = r.bottom + 6;
+  if (top + ph > window.innerHeight - 8 && r.top - ph - 6 > 8) top = r.top - ph - 6;
+  picker.style.left = left + window.scrollX + "px";
+  picker.style.top = top + window.scrollY + "px";
+
+  (picker.querySelector('[aria-checked="true"]') || picker.querySelector(".opt")).focus();
+}
+
+picker.addEventListener("keydown", e => {
+  const opts = [...picker.querySelectorAll(".opt")];
+  const i = opts.indexOf(document.activeElement);
+  if (e.key === "ArrowDown") { e.preventDefault(); opts[(i + 1) % opts.length].focus(); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); opts[(i - 1 + opts.length) % opts.length].focus(); }
+  else if (e.key === "Home") { e.preventDefault(); opts[0].focus(); }
+  else if (e.key === "End") { e.preventDefault(); opts[opts.length - 1].focus(); }
+  else if (e.key === "Tab") closePicker(false);
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closePicker(true); });
+document.addEventListener("pointerdown", e => {
+  if (openFor && !picker.contains(e.target) && !openFor.pick.contains(e.target)) closePicker(false);
+});
+window.addEventListener("resize", () => closePicker(false));
 </script>
 
 </body></html>
