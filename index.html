@@ -71,14 +71,23 @@ body {
   background: var(--surface);
   border-bottom: 1px solid var(--line);
 }
+@font-face { font-family: "Hylia Serif"; src: url("fonts/HyliaSerifBeta-Regular.otf") format("opentype"); font-display: swap; }
+@font-face { font-family: "Hylian Symbols"; src: url("fonts/HylianSymbols.ttf") format("truetype"); font-display: block; }
 .brand {
   align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
-  font: 600 12px var(--f-mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font: 400 18px "Hylia Serif", Georgia, serif;
+  font-synthesis: none;
+  color: var(--ink);
   white-space: nowrap;
+}
+.brand .glyph {
+  font: 400 15px "Hylian Symbols";
+  color: var(--accent);
+  user-select: none;
 }
 
 /* Tabs */
@@ -220,7 +229,7 @@ iframe[hidden] { display: none; }
 <body>
 
 <header class="bar">
-  <p class="brand">Ocarina of Time · Switch 2</p>
+  <p class="brand"><span class="glyph" aria-hidden="true">b</span>Ocarina of Time · Switch 2</p>
 
   <nav aria-label="Charts">
     <ul class="tabs" id="tabs"></ul>

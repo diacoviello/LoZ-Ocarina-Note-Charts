@@ -46,6 +46,7 @@ Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo 
 ├── index.html                           # GitHub Pages site: chart tabs + download menu
 ├── *.html                               # interactive chart pages shown in the site's tabs
 ├── downloadable-files/                  # PDF and Markdown copies offered by "Download a copy"
+├── fonts/                               # Hylia Serif (headings) and Hylian Symbols (ornaments)
 ├── Ocarina Charts/
 │   ├── Ocarina Note Chart.md            # full note chart (renders on GitHub)
 │   ├── Ocarina Major Key Fingerings.md  # 12 major keys (renders on GitHub)

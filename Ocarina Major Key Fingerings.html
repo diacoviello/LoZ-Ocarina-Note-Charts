@@ -162,8 +162,36 @@ td a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; bord
 .opt .tags { margin-left: auto; padding-left: 12px; display: inline-flex; gap: 6px; align-items: center; }
 .opt .rec { font-family: var(--f-mono); font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ok); }
 
-footer { font-size: 13px; color: var(--muted); max-width: 72ch; display: grid; gap: 6px; }
-footer p { margin: 0; }
+footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+footer p { margin: 0; max-width: 72ch; }
+
+/* ---------- Hylian type and ornaments (fonts/ folder) ---------- */
+@font-face { font-family: "Hylia Serif"; src: url("fonts/HyliaSerifBeta-Regular.otf") format("opentype"); font-display: swap; }
+@font-face { font-family: "Hylian Symbols"; src: url("fonts/HylianSymbols.ttf") format("truetype"); font-display: block; }
+:root { --f-hylia: "Hylia Serif", "Bodoni Moda", Georgia, serif; }
+/* Hylia Serif has one weight; turn off faux bold. ♭ ♯ · fall back to the serif after it. */
+h1, .panel h2, .card-head h3 { font-family: var(--f-hylia); font-weight: 400; font-synthesis: none; }
+h1 { letter-spacing: 0; line-height: 1.1; }
+.panel h2 { font-size: 20px; letter-spacing: .01em; text-transform: none; color: var(--ink); }
+.card-head h3 { font-size: 32px; }
+/* Hylia Serif has no ♭/♯; size the fallback glyph to sit with the letter. */
+.card-head h3 .acc { font-family: var(--f-display); font-size: .62em; margin-left: 1px; vertical-align: .32em; }
+
+.glyph { font-family: "Hylian Symbols"; font-weight: 400; font-style: normal; line-height: 1; letter-spacing: 0; text-transform: none; user-select: none; }
+.eyebrow .glyph { font-size: 13px; margin-right: 8px; vertical-align: -1px; }
+header { position: relative; }
+.crest { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 150px; color: var(--accent); opacity: .1; pointer-events: none; }
+@media (min-width: 720px) { header { padding-right: 190px; } }
+@media (max-width: 719px) { .crest { display: none; } }
+
+.ornament { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; color: var(--accent); }
+.ornament::before, .ornament::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.ornament .glyph { font-size: 18px; }
+
+/* One emblem per key: a watermark on its card and a marker in the summary table. */
+.card { position: relative; }
+.emblem { position: absolute; top: 12px; right: 16px; font-size: 64px; color: var(--accent); opacity: .12; pointer-events: none; }
+.emblem-sm { display: inline-block; width: 22px; margin-right: 8px; font-size: 16px; color: var(--accent); vertical-align: 1px; }
 
 /* Off-screen copy of the page used to build the PDF download (light colors, no controls). */
 .exporting {
@@ -202,7 +230,8 @@ footer p { margin: 0; }
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Ocarina of Time · Switch 2 · Major keys</div>
+    <span class="crest glyph" aria-hidden="true">k</span>
+    <div class="eyebrow"><span class="glyph" aria-hidden="true">b</span>Ocarina of Time · Switch 2 · Major keys</div>
     <h1>Performance fingerings for all 12 major keys</h1>
     <p class="lede">One input per scale note, picked for playing in tempo rather than for having the fewest buttons. The shaded span on each staff is the octave to perform in; dimmed notes are in range but outside it.</p>
   </header>
@@ -233,6 +262,7 @@ footer p { margin: 0; }
   <div class="picker" id="picker" role="menu" hidden></div>
 
   <footer>
+    <div class="ornament" aria-hidden="true"><span class="glyph">b</span></div>
     <p>Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo hasn't published the remake's sounding octave, so treat octave numbers as written pitch.</p>
     <p>Difficulty scores the performance octave played up and down: each D-pad press, each stick tilt, each switch of the thumb between D-pad and stick, and claw-grip notes. Tap any fingering to see its alternatives; the full note chart lists every input for every pitch.</p>
   </footer>
@@ -245,6 +275,8 @@ const LET = { C:0, D:1, E:2, F:3, G:4, A:5, B:6 };
 const SHARP_STEPS = [10, 7, 11, 8, 5, 9, 6];
 const FLAT_STEPS = [6, 9, 5, 8, 4, 7, 3];
 const ENH = { "G♭": "F♯", "D♭": "C♯", "B": "C♭" };
+// Hylian Symbols emblems, one per key in circle-of-fifths order (C G D A E B G♭ D♭ A♭ E♭ B♭ F).
+const EMBLEMS = "ghijlmnopqrs";
 const SLUG = n => "key-" + n.replace("♭", "b").replace("♯", "s").toLowerCase();
 
 const dpadIcon = up => `<svg viewBox="0 0 18 18" aria-hidden="true"><path d="M6.5 1.5h5v5h5v5h-5v5h-5v-5h-5v-5h5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="${up ? "M6.5 1.5h5v5h-5z" : "M6.5 11.5h5v5h-5z"}" fill="currentColor"/></svg>`;
@@ -307,12 +339,12 @@ const plain = s => s.replace(/(\d)$/, "$1");
 
 /* ---------- summary ---------- */
 const sb = document.getElementById("sumBody");
-KEYS.forEach(k => {
+KEYS.forEach((k, ki) => {
   const w = k.window;
   const tr = document.createElement("tr");
   const thumb = w.stick && w.dpad ? "D-pad + stick" : w.stick ? "Stick only" : w.dpad ? "D-pad only" : "None";
   tr.innerHTML = `
-    <td><a href="#${SLUG(k.name)}">${k.name}</a></td>
+    <td><span class="glyph emblem-sm" aria-hidden="true">${EMBLEMS[ki]}</span><a href="#${SLUG(k.name)}">${k.name}</a></td>
     <td><span class="mono">${w.lo}–${w.hi}</span><br><span class="muted small">${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"}</span></td>
     <td><span class="pill ${w.level.split(" ")[0]}">${w.level}</span></td>
     <td>${thumb}</td>
@@ -327,7 +359,7 @@ const y = st => TOP + 78 - (st - 2) * (SP / 2);
 const ROMAN = [null, "I", "ii", "iii", "IV", "V", "vi", "vii°"];
 const host = document.getElementById("keys");
 
-KEYS.forEach(k => {
+KEYS.forEach((k, ki) => {
   const w = k.window, notes = k.notes, N = notes.length;
   const renders = [];
   const sigN = k.count;
@@ -340,8 +372,9 @@ KEYS.forEach(k => {
   card.id = SLUG(k.name);
   const thumb = w.stick && w.dpad ? "D-pad + stick" : w.stick ? "stick only" : w.dpad ? "D-pad only" : "no modifiers";
   card.innerHTML = `
+    <span class="glyph emblem" aria-hidden="true">${EMBLEMS[ki]}</span>
     <div class="card-head">
-      <h3>${k.name}<small>major${ENH[k.name] ? " · " + ENH[k.name] : ""}</small></h3>
+      <h3>${k.name.replace(/[♭♯]/g, a => `<span class="acc">${a}</span>`)}<small>major${ENH[k.name] ? " · " + ENH[k.name] : ""}</small></h3>
       <div class="facts">
         <span class="pill ${w.level.split(" ")[0]}">${w.level}</span>
         <span>Perform <b>${w.lo}–${w.hi}</b> (${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"})</span>
