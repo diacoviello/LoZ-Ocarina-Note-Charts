@@ -190,8 +190,11 @@ h1 { font-family: var(--f-main); letter-spacing: .01em; line-height: 1.1; }
 td a, .range .nn, .card-head .nn { font-family: var(--f-note); font-weight: 400; font-synthesis: none; }
 td a, .range .nn { font-size: 27px; line-height: 1.1; }
 .card-head .facts .nn { font-size: 16px; }
-/* Hylia Serif has no ♭/♯; size the fallback glyph to sit with the letter. */
-.card-head h3 .acc { font-family: var(--f-display); font-size: .62em; margin-left: 1px; vertical-align: .32em; }
+/* Sharps and flats: superscript beside their letter (added by raiseAccidentals). */
+.acc { font-family: "Bodoni Moda", var(--f-music); font-weight: 400; font-style: normal; font-size: max(.62em, 10px); line-height: 0; vertical-align: .7em; margin-left: .04em; }
+/* Ranges set their letters larger than the text around them, so size the accidental to the letter. */
+.range .acc { font-size: 16px; }
+.card-head .facts .acc { font-size: 10px; }
 
 .glyph { font-family: "Hylian Symbols"; font-weight: 400; font-style: normal; line-height: 1; letter-spacing: 0; text-transform: none; user-select: none; }
 .eyebrow .glyph { font-size: 13px; margin-right: 8px; vertical-align: -1px; }
@@ -392,7 +395,7 @@ KEYS.forEach((k, ki) => {
   card.innerHTML = `
     <span class="glyph emblem" aria-hidden="true">${EMBLEMS[ki]}</span>
     <div class="card-head">
-      <h3>${noteLetters(k.name).replace(/[♭♯]/g, a => `<span class="acc">${a}</span>`)}<small>major${ENH[k.name] ? " · " + ENH[k.name] : ""}</small></h3>
+      <h3>${noteLetters(k.name)}<small>major${ENH[k.name] ? " · " + ENH[k.name] : ""}</small></h3>
       <div class="facts">
         <span class="pill ${w.level.split(" ")[0]}">${w.level}</span>
         <span>Perform <b>${noteLetters(w.lo)}–${noteLetters(w.hi)}</b> (${w.kind === "tonic" ? "tonic to tonic" : "5th to 5th"})</span>
@@ -540,6 +543,7 @@ function openPicker(pick, k, n, onChange) {
     picker.append(opt);
   }
 
+  raiseAccidentals(picker);
   picker.hidden = false;
   pick.setAttribute("aria-expanded", "true");
   const scroller = pick.closest(".scroll");
@@ -716,6 +720,31 @@ window.ocarinaExport = {
   async pdf() { return { blob: await buildPdf(), filename: fileBase() + ".pdf" }; },
   async md() { return { blob: buildMarkdown(), filename: fileBase() + ".md" }; },
 };
+/* ---------- superscript accidentals ----------
+   Wrap every ♯/♭ in the page text in <span class="acc"> so it sits raised beside its letter.
+   Staff drawings (SVG) keep their notation as is; the letters themselves are untouched. */
+function raiseAccidentals(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: t => /[♯♭]/.test(t.nodeValue) && !t.parentElement.closest("svg, script, style, .acc")
+      ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT,
+  });
+  const found = [];
+  while (walker.nextNode()) found.push(walker.currentNode);
+  for (const t of found) {
+    const frag = document.createDocumentFragment();
+    for (const part of t.nodeValue.split(/([♯♭])/)) {
+      if (!part) continue;
+      if (part === "♯" || part === "♭") {
+        const s = document.createElement("span");
+        s.className = "acc";
+        s.textContent = part;
+        frag.append(s);
+      } else frag.append(part);
+    }
+    t.replaceWith(frag);
+  }
+}
+raiseAccidentals(document.body);
 </script>
 
 </body></html>
