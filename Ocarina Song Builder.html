@@ -223,6 +223,13 @@ body { margin: 0; }
   font: 16px var(--f-body); min-height: 44px; border: 1px solid var(--line); border-radius: 8px;
   background: var(--surface); color: var(--ink); padding: 0 10px;
 }
+.namerow .sel-wrap { display: flex; width: min(100%, 32rem); }
+.namerow input {
+  flex: 1; min-width: 0; font: 16px var(--f-body); min-height: 44px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface); color: var(--ink); padding: 0 12px;
+}
+.namerow input::placeholder { color: var(--muted); opacity: 1; }
+.namerow input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .chk { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; min-height: 44px; }
 .chk input { width: 18px; height: 18px; accent-color: var(--accent); }
 .transport { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center; }
@@ -406,6 +413,12 @@ header { position: relative; }
       <p class="lede">Add notes on the grid, then pick the button combination for each one and play the song back to hear how the choices change the sound.</p>
       <div class="stats"><span><b id="recCount">5</b> of 45 combinations recorded</span><span>the rest play as estimates</span></div>
     </header>
+
+    <div class="namerow">
+      <label class="sel-wrap" for="songName">Song name
+        <input id="songName" type="text" maxlength="120" autocomplete="off" spellcheck="true" enterkeyhint="done" placeholder="My ocarina song">
+      </label>
+    </div>
 
     <div class="transport">
       <button type="button" class="ctl round" id="startBtn" aria-label="Back to start"></button>
@@ -1223,14 +1236,21 @@ function buildMarkdown() {
     "*Notes are named at written pitch; the game sounds one octave higher.*", "");
   return new Blob([L.join("\n")], { type: "text/markdown;charset=utf-8" });
 }
+// One name, shared by the field at the top of the page and the one in the site's download menu.
+const nameField = $("songName");
+nameField.value = songName;
+function setSongName(name) {
+  songName = String(name || "").slice(0, 120);
+  if (nameField.value !== songName) nameField.value = songName;
+  try { localStorage.setItem("ocarina-song-name", songName); } catch (e) {}
+}
+nameField.addEventListener("input", () => setSongName(nameField.value));
+nameField.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); nameField.blur(); } });
 window.ocarinaExport = {
   async md() { return { blob: buildMarkdown(), filename: fileNameOf() + ".md" }; },
-  // Used by the site's "Download a copy" menu, which shows the song name field.
+  // Used by the site's "Download a copy" menu, which fills its song name field from getName().
   getName() { return songName; },
-  setName(name) {
-    songName = String(name || "").slice(0, 120);
-    try { localStorage.setItem("ocarina-song-name", songName); } catch (e) {}
-  },
+  setName: setSongName,
   defaultName: DEFAULT_NAME,
 };
 
