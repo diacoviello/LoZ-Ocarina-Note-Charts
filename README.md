@@ -46,6 +46,7 @@ Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo 
 .
 ├── index.html                           # GitHub Pages site: chart tabs + download menu
 ├── *.html                               # interactive chart pages shown in the site's tabs
+├── theme.css                            # site theme (Hyrule UI look), loaded by every page; credited in each footer
 ├── audio/                               # ocarina notes recorded from the game, played by the Song Builder
 ├── downloadable-files/                  # PDF and Markdown copies offered by "Download a copy"
 ├── fonts/                               # Hylia Serif (headings) and Hylian Symbols (ornaments)

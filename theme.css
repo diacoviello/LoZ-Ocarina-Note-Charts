@@ -1,0 +1,80 @@
+/* Site theme: the Hyrule UI look (dark slate, tan inset frames, Sheikah-blue glow).
+   Design adapted from the Zelda BOTW UI Kit by Hunter Paramore (CC BY 4.0),
+   https://www.figma.com/community/file/965825767811358609, by way of zelda-hyrule-ui
+   (https://github.com/chaos-xxl/zelda-hyrule-ui, MIT). Credited in each page's footer.
+
+   Every page reads its colors from the same variables, so this file only resets them and adds trim.
+   It applies to pages whose <html> has data-palette="hyrule", and must load after the page's own <style>. */
+
+:root[data-palette="hyrule"],
+:root[data-palette="hyrule"] .dl-menu {
+  color-scheme: dark;
+  --paper: #121210; --surface: #1e1d1a; --ink: #e9e1d1; --muted: #a39d91; --line: #4a4842;
+  --accent: #3cd3fc; --accent-soft: #0d2a35; --accent-line: rgb(60 211 252 / .3); --staff: #e9e1d1;
+  --dpad: #fcc413; --dpad-soft: #3a2f0a; --stick: #6fd49c; --stick-soft: #13301f;
+  --warn: #ff8a80; --warn-soft: #3d1a18; --ok: #7bd99a; --ok-soft: #15301f; --mid: #f2c46b; --mid-soft: #382a10;
+  --dim: #605c55; --row-sharp: #191816; --gl: #423f3a; --gl2: #2f2d29; --gl4: #5c5952;
+  --shadow: 0 10px 28px rgb(0 0 0 / .5);
+  --tan: #e2ded3; --frame: rgb(226 222 211 / .22); --sheikah: #3cd3fc; --sheikah-glow: #4fc0ff; --sheikah-bg: #0a1428;
+}
+
+/* Page: dark slate with a faint grain and a blue haze at the top */
+:root[data-palette="hyrule"] body { background-color: var(--paper); }
+:root[data-palette="hyrule"] body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .05 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(120% 55% at 50% -8%, rgb(60 211 252 / .10), transparent 70%);
+}
+:root[data-palette="hyrule"] h1 { color: var(--tan); text-shadow: 0 0 20px rgb(0 0 0 / .8); }
+:root[data-palette="hyrule"] .crest { color: var(--sheikah); opacity: .12; }
+:root[data-palette="hyrule"] .ornament { color: var(--tan); }
+:root[data-palette="hyrule"] .ornament::before { background: linear-gradient(to right, transparent, var(--frame)); }
+:root[data-palette="hyrule"] .ornament::after { background: linear-gradient(to left, transparent, var(--frame)); }
+
+/* Panels and cards: a tan line inset 3px from the edge */
+:root[data-palette="hyrule"] :is(.panel, .card, .rollbox) {
+  border-color: rgb(0 0 0 / .6);
+  box-shadow: inset 0 0 0 3px var(--surface), inset 0 0 0 4px var(--frame), 0 0 11px rgb(0 0 0 / .6);
+}
+
+/* Buttons: same inset frame, italic labels, warm glow on hover */
+:root[data-palette="hyrule"] :is(.ctl, .seg) {
+  border-color: rgb(0 0 0 / .7); border-radius: 4px; font-style: italic;
+  box-shadow: inset 0 0 0 3px var(--surface), inset 0 0 0 4px rgb(226 222 211 / .3);
+  transition: box-shadow .25s cubic-bezier(.4, 0, .2, 1), background .25s;
+}
+:root[data-palette="hyrule"] .ctl:hover:not([disabled]) {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 3px var(--surface), inset 0 0 0 4px rgb(226 222 211 / .7),
+    inset 0 0 7px 3px rgb(246 231 152 / .35), 0 0 12px 1px rgb(227 227 200 / .5);
+}
+/* The main action (Play) in Sheikah blue */
+:root[data-palette="hyrule"] .ctl.primary {
+  background: var(--sheikah-bg); color: var(--sheikah); border-color: #000;
+  box-shadow: inset 0 0 0 3px var(--sheikah-bg), inset 0 0 0 4px rgb(60 211 252 / .55), 0 0 8px rgb(79 192 255 / .4);
+}
+:root[data-palette="hyrule"] .ctl.primary:hover {
+  background: var(--sheikah-bg);
+  box-shadow: inset 0 0 0 3px var(--sheikah-bg), inset 0 0 0 4px var(--sheikah), 0 0 10px var(--sheikah-glow), 0 1px 11px #0a8dd7;
+}
+:root[data-palette="hyrule"] :is(.sel-wrap select, .namerow input) { border-radius: 4px; border-color: rgb(226 222 211 / .3); }
+
+/* Site top bar (index.html): near-black band, tan text, glowing current tab */
+:root[data-palette="hyrule"] header.bar {
+  --surface: #080807; --ink: var(--tan); --accent: var(--sheikah); --accent-soft: rgb(60 211 252 / .16);
+  background: linear-gradient(#20201f, #080807 70%);
+  border-bottom: 1px solid rgb(226 222 211 / .35);
+  box-shadow: 0 0 11px rgb(0 0 0 / .8);
+}
+:root[data-palette="hyrule"] .tabs a[aria-current="page"] { border-bottom-color: var(--sheikah); text-shadow: 0 0 8px var(--sheikah-glow); }
+:root[data-palette="hyrule"] .dl-btn { border: 1px solid rgb(60 211 252 / .45); border-radius: 4px; }
+:root[data-palette="hyrule"] .dl-menu { border-color: rgb(226 222 211 / .35); }
+
+/* Credit line in each page's footer */
+:root[data-palette="hyrule"] footer .credit a { color: var(--accent); }
+
+/* Downloads: the Major Key PDF renders an off-screen copy (.exporting) in print colors. Keep the theme out of it. */
+:root[data-palette="hyrule"] .exporting { color-scheme: light; --tan: var(--ink); --frame: var(--line); --sheikah: var(--accent); }
+:root[data-palette="hyrule"] .exporting :is(.panel, .card, .rollbox, .ctl, .seg) { border-color: var(--line); box-shadow: none; }
+:root[data-palette="hyrule"] .exporting h1 { text-shadow: none; }
