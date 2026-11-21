@@ -2,7 +2,7 @@
 
 Note and fingering charts for the ocarina in *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2.
 
-**View the charts online: <https://diacoviello.github.io/LoZ-Ocarina-Note-Charts/>.** Each chart has its own tab, and **Download a copy** gives you that chart as a PDF or Markdown file. On the Major Key Fingerings tab you can swap any note's fingering, and the downloads are built in your browser with your picks included.
+**View the charts online: <https://diacoviello.github.io/LoZ-Ocarina-Note-Charts/>.** Each chart has its own tab, the Song Builder tab lets you write a melody and hear each note's button combination, and **Download a copy** gives you that chart as a PDF or Markdown file. On the Major Key Fingerings tab you can swap any note's fingering, and the downloads are built in your browser with your picks included.
 
 The ocarina has five note buttons (L, R, A, Y, X). The D-pad bends a note by a half step and the left stick bends it by a whole step, and you can combine the two. That gives **19 pitches from 45 inputs, across the range B3–F5**. These charts show every way to play each pitch, plus practical fingerings for playing all 12 major scales in tempo.
 
@@ -12,6 +12,7 @@ The ocarina has five note buttons (L, R, A, Y, X). The D-pad bends a note by a h
 |---|---|
 | [Ocarina Note Chart](Ocarina%20Charts/Ocarina%20Note%20Chart.md) | Every pitch from low to high, shown on a staff with every input that plays it. The easiest input for each pitch is marked. |
 | [Ocarina Major Key Fingerings](Ocarina%20Charts/Ocarina%20Major%20Key%20Fingerings.md) | Scale fingerings for all 12 major keys around the circle of fifths, with difficulty ratings and the octave to perform each key in. |
+| Song Builder (site only) | Write a melody on a note grid, choose the button combination for every note, and play it back. Five combinations play sounds recorded from the game; the rest play estimates until they're recorded. |
 
 The Markdown versions in [`Ocarina Charts/`](Ocarina%20Charts/) display directly on GitHub. Interactive HTML versions are in the repo root. Download one and open it in a browser. The note chart can play a reference tone for each pitch.
 
@@ -45,6 +46,7 @@ Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo 
 .
 ├── index.html                           # GitHub Pages site: chart tabs + download menu
 ├── *.html                               # interactive chart pages shown in the site's tabs
+├── audio/                               # ocarina notes recorded from the game, played by the Song Builder
 ├── downloadable-files/                  # PDF and Markdown copies offered by "Download a copy"
 ├── fonts/                               # Hylia Serif (headings) and Hylian Symbols (ornaments)
 ├── Ocarina Charts/
@@ -54,7 +56,9 @@ Pitch names follow the original game's layout (L = D4 through X = D5). Nintendo 
 └── .nojekyll                            # serve files as-is (keeps .md downloads raw)
 ```
 
-To add a chart to the site, put its HTML page in the root, its PDF and Markdown copies in `downloadable-files/`, and add an entry to the `CHARTS` list near the bottom of `index.html`.
+To add a chart to the site, put its HTML page in the root, its PDF and Markdown copies in `downloadable-files/`, and add an entry to the `CHARTS` list near the bottom of `index.html`. A chart can offer only one download kind, and a `generated` chart can leave `file` as `null` when its page builds the download (the Song Builder does this). Set `nameable: true` to show a name field in the download menu; the page stores the name through `ocarinaExport.getName()` / `setName()` and uses it for the file.
+
+To add a recording to the Song Builder, put the MP3 in `audio/` named after its combination (for example `A_Dup_Sdown.mp3` for A + D-pad ↑ + Stick ↓) and add its measured tuning to `RECORDED` in `Ocarina Song Builder.html`.
 
 ---
 

@@ -203,6 +203,14 @@ nav { display: flex; min-width: 0; }
   border-radius: 6px;
 }
 .dl-menu strong { font-weight: 600; }
+.dl-name { display: grid; gap: 6px; padding: 6px 10px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+.dl-name label { font: 600 13px var(--f-body); color: var(--muted); }
+.dl-name input {
+  width: 100%; min-height: 40px; padding: 0 10px; font: 16px var(--f-body); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+}
+.dl-name input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+.dl-name small { color: var(--muted); font-size: 12px; }
 .dl-menu small { color: var(--muted); font-size: 13px; }
 
 /* Chart frames */
@@ -249,6 +257,11 @@ iframe[hidden] { display: none; }
     </button>
     <ul class="dl-menu" id="dl-menu" hidden>
       <li class="dl-head" id="dl-head"></li>
+      <li class="dl-name" id="dl-name" hidden>
+        <label for="song-name">Song name</label>
+        <input id="song-name" type="text" maxlength="120" autocomplete="off" spellcheck="true" enterkeyhint="done">
+        <small>Used as the title and file name. Press Enter to download.</small>
+      </li>
       <li><a id="dl-pdf" download>
         <span class="badge" aria-hidden="true">PDF</span>
         <strong>PDF</strong>
@@ -286,6 +299,16 @@ const CHARTS = [
     generated: true,
     pdf: { file: "downloadable-files/Ocarina Major Key Fingerings.pdf", note: "Printable · with your fingerings" },
     md:  { file: "downloadable-files/Ocarina Major Key Fingerings.md", note: "Plain text · with your fingerings" },
+  },
+  {
+    id: "song-builder",
+    label: "Song Builder",
+    short: "Songs",
+    page: "Ocarina Song Builder.html",
+    // Markdown only, built from the song on screen. No static copy: there's nothing to download until you write a song.
+    generated: true,
+    nameable: true, // shows the song name field in the download menu (stored by the page)
+    md:  { file: null, note: "Your song as a numbered list" },
   },
 ];
 
@@ -331,8 +354,12 @@ function show(id) {
   document.getElementById("dl-head").textContent = chart.label;
   for (const kind of ["pdf", "md"]) {
     const link = document.getElementById("dl-" + kind);
-    link.href = enc(chart[kind].file);
-    link.download = chart[kind].file.split("/").pop();
+    // A chart can offer just one kind; a generated-only download has no static file behind it.
+    link.closest("li").hidden = !chart[kind];
+    if (!chart[kind]) continue;
+    const file = chart[kind].file;
+    if (file) { link.href = enc(file); link.download = file.split("/").pop(); }
+    else { link.href = "#"; link.removeAttribute("download"); }
     document.getElementById(`dl-${kind}-note`).textContent = chart[kind].note;
   }
 
@@ -341,10 +368,25 @@ function show(id) {
 }
 
 // Download menu
+const nameRow = document.getElementById("dl-name"), nameInput = document.getElementById("song-name");
+const pageApi = () => frames[current.id]?.contentWindow?.ocarinaExport;
 function openMenu() {
+  const api = current.nameable && pageApi();
+  nameRow.hidden = !(api && api.setName);
+  if (!nameRow.hidden) {
+    nameInput.value = api.getName() || "";
+    nameInput.placeholder = api.defaultName || "";
+  }
   menu.hidden = false;
   btn.setAttribute("aria-expanded", "true");
+  if (!nameRow.hidden) nameInput.focus();
 }
+nameInput.addEventListener("input", () => pageApi()?.setName?.(nameInput.value));
+nameInput.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  document.getElementById("dl-md").click();
+});
 function closeMenu(focusButton) {
   if (menu.hidden) return;
   menu.hidden = true;
@@ -380,7 +422,10 @@ for (const kind of ["pdf", "md"]) {
   const link = document.getElementById("dl-" + kind);
   link.addEventListener("click", async (e) => {
     const api = current.generated && frames[current.id]?.contentWindow?.ocarinaExport;
-    if (!api) return; // not ready: the link downloads the static file
+    if (!api || !api[kind]) {
+      if (!current[kind]?.file) e.preventDefault(); // nothing static to fall back on
+      return; // otherwise the link downloads the static file
+    }
     e.preventDefault();
     closeMenu();
     setBusy(kind === "pdf" ? "Building PDF…" : "Building file…");
@@ -389,7 +434,7 @@ for (const kind of ["pdf", "md"]) {
       saveBlob(blob, filename);
     } catch (err) {
       console.error(err);
-      saveBlob(await (await fetch(link.href)).blob(), link.download);
+      if (current[kind]?.file) saveBlob(await (await fetch(link.href)).blob(), link.download);
     } finally {
       setBusy(null);
     }
